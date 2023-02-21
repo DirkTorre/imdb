@@ -1,3 +1,12 @@
+"""
+todo: cleaningAndAddingSeenData() and cleaningAndAddingUnseenData() need to be made more efficient
+- downloads fresh copy of the iMDb database (if var set)
+- updates /data/handcrafted/raw_status.xslsx with movies in the two files:
+    - /data/handcrafted/add_movies_seen.txt
+    - - /data/handcrafted/add_movies_unseen.txt
+"""
+
+
 import os
 import re
 import time
@@ -31,7 +40,7 @@ FILES_GENERATED = {
 }
 
 # set this var if you want to downoad a fresh copy of the latest iMDb movie data
-DOWNLOAD = False
+DOWNLOAD = True
 
 def main():
     # 1 download the files

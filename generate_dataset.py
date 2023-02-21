@@ -35,12 +35,23 @@ DOWNLOAD = False
 
 
 def main():
-    if DOWNLOAD:
-        downloadFiles()
-    
-    updateWatchList()
-    watched = loadAndCleanWatchedData()
-    watched = addIMDbData(watched)
+    ## load the core files
+    ######################
+
+    # 3 load and clean the watched movies data
+    ids_and_status = os.path.join("data", "handcrafted", FILES_HAND["raw_status"])
+    watched = pd.read_excel(ids_and_status)
+    watched = loadAndCleanWatchedData(watched)
+
+    # 4 load the files that are needed to extend the watched movies
+    title_basics_path = os.path.join("data", "imdb", FILES_IMDB["tit_bas"])
+    title_basics = pd.read_csv(title_basics_path, sep="\t")
+    title_rate_path = os.path.join("data", "imdb", FILES_IMDB["tit_rate"])
+    title_rate = pd.read_csv(title_rate_path, sep="\t")
+    cast_crew_mega_path = os.path.join("data", "imdb", FILES_IMDB["cast_crew"])
+
+    # 5 generate the dataset
+    watched = addIMDbData(watched, title_basics, title_rate, cast_crew_mega_path)
     saveAsPickle(watched)
 
 
@@ -74,13 +85,15 @@ def downloadFiles():
         os.remove(file_zip)
 
 
-def updateWatchList():
+def updateWatchList(seen_raw, unseen_raw, movie_list_raw):
     ## getting the new seen movies
     ##############################
-    
-    seen_path = os.path.join("data", "handcrafted", FILES_HAND["add_seen"])
-    seen_raw_f = open(seen_path,'r')
-    seen_raw = seen_raw_f.readlines()
+
+    # file lines for seen movies must be one of the following:
+    #   <url>|<score as float>|<date as day-month-year>
+    #   <url>|<score as float>
+    #   <url>||<date as day-month-year>
+    #   <url>|
 
     # transforming the new seen movie data
     for linei in range(len(seen_raw)):
@@ -115,13 +128,8 @@ def updateWatchList():
             seen_raw[linei] = [ttcode, row2, filmdate]
 
 
-
     ## getting the new unseen movies
     ################################
-
-    unseen_path = os.path.join("data", "handcrafted", FILES_HAND["add_unseen"])
-    unseen_raw_f = open(unseen_path,'r')
-    unseen_raw = unseen_raw_f.readlines()
 
     # transforming the new unseen movie data
     for linei in range(len(unseen_raw)):
@@ -152,7 +160,7 @@ def updateWatchList():
             movie_list_raw.at[found_index,"enjoyment"]
             enjoyment = movie_list_raw.at[found_index,"enjoyment"]
             watched = int(movie_list_raw.at[found_index,"watched"])
-            watched_date = movie_list_raw.at[found_index,"watched_date"]
+            # watched_date = movie_list_raw.at[found_index,"watched_date"]
             if watched==1:
                 # update the score only if null
                 if(pd.isnull(enjoyment)):
@@ -181,13 +189,10 @@ def updateWatchList():
 
             movie_list_raw = pd.concat([movie_list_raw, to_add.to_frame().T], ignore_index=True)
     
-    movie_list_raw.sort_values(["tconst"]).to_excel(ids_and_status, index=False)
-    del movie_list_raw
+    return movie_list_raw
 
 
-def loadAndCleanWatchedData():
-    ids_and_status = os.path.join("data", "handcrafted", FILES_HAND["raw_status"])
-    watched = pd.read_excel(ids_and_status)
+def loadAndCleanWatchedData(watched):
     watched["watched"] = watched["watched"].astype('Int64').astype(bool)
     watched["prime"] = watched["prime"].astype('Int64').replace(0, False).replace(1, True)
     watched["netflix"] = watched["netflix"].astype('Int64').replace(0, False).replace(1, True)
@@ -196,16 +201,14 @@ def loadAndCleanWatchedData():
     return watched
 
 
-def addIMDbData(watched):
-    watched = addBasicTitleData(watched)
-    watched = addRatings(watched)
-    watched = addCastAndCrew(watched)
+def addIMDbData(watched, title_basics, title_rate, cast_crew_mega_file):
+    watched = addBasicTitleData(watched, title_basics)
+    watched = addRatings(watched, title_rate)
+    watched = addCastAndCrew(watched, cast_crew_mega_file)
     return watched
 
 
-def addBasicTitleData(watched):
-    title_basics_file = os.path.join("data", "imdb", FILES_IMDB["tit_bas"])
-    title_basics = pd.read_csv(title_basics_file, sep="\t")
+def addBasicTitleData(watched, title_basics):
     title_basics = title_basics.replace(to_replace = "\\N", value = np.nan)
     # title_watched = pd.merge(watched, title_basics, on="tconst", how="left") # new merge, keeps wrong stuff
     watched_title = pd.merge(watched, title_basics, on="tconst", how="left") # new merge, keeps wrong stuff
@@ -213,9 +216,7 @@ def addBasicTitleData(watched):
     return watched_title
 
 
-def addRatings(watched_title):
-    title_rate_file = os.path.join("data", "imdb", FILES_IMDB["tit_rate"])
-    title_rate = pd.read_csv(title_rate_file, sep="\t")
+def addRatings(watched_title, title_rate):
     title_rate = title_rate.replace(to_replace = "\\N", value = np.nan)
     title_rate.loc[:,"numVotes"] = title_rate.loc[:,"numVotes"].astype('Int64')
     # watched_film_fin = pd.merge(watched_title,title_rate, on="tconst", how="left")
@@ -224,10 +225,9 @@ def addRatings(watched_title):
     return watched_title_rate
 
 
-def addCastAndCrew(watched_title_rate):
+def addCastAndCrew(watched_title_rate, cast_crew_mega_file):
     # get cast and crew from the big file
     #####################################
-    cast_crew_mega_file = os.path.join("data", "imdb", FILES_IMDB["cast_crew"])
     watched_films_cast  = pd.DataFrame(columns=["tconst", "ordering","nconst", "category", "job", "characters"])
 
     for chunk in pd.read_csv(cast_crew_mega_file, sep="\t", chunksize=1000):

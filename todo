@@ -1,0 +1,7 @@
+- create a new branch
+- convert 'generate_dataset.py' so it can be used with the ML pipeline.
+- make a processing script according to the example that can be used with the ML pipeline.
+    - keep track of normalization steps and vars
+- train a basic model using the pipeline, change the previous scripts if needed
+- execute model on all movies score > 5 to test the pipeline (to test if the batch convert works)
+

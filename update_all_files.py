@@ -25,7 +25,8 @@ FILES_IMDB = {
     "tit_bas": "title.basics.tsv",
     "tit_rate": "title.ratings.tsv",
     "name_bas": "name.basics.tsv",
-    "cast_crew": "title.principals.tsv",
+    "tit_prin": "title.principals.tsv",
+    "cast_crew": "title.crew.tsv",
 }
 
 FILES_HAND = {

@@ -1,7 +1,75 @@
-- create a new branch
+# interesting thing:
+    the principles file only contains the 10 most important figures of the movie.
+    it does not contain the entire crew
+    They probably did that because the crew data is way to big.
+
+
+# general
+- (done) create a new branch
 - convert 'generate_dataset.py' so it can be used with the ML pipeline.
 - make a processing script according to the example that can be used with the ML pipeline.
     - keep track of normalization steps and vars
 - train a basic model using the pipeline, change the previous scripts if needed
 - execute model on all movies score > 5 to test the pipeline (to test if the batch convert works)
 
+# keeping track
+data is exploded on:
+    - directors
+    - writers
+    - primaryProfession
+    - knownForTitles
+    -
+
+# Data preparation
+
+cleaning data:
+    - remove weird birth and death years
+    - remove titles
+    - remove columns:
+        watched_date, netflix, prime, titleType, primaryTitle, originalTitle, isAdult, endYear
+    - remove noise (outliers, stochastic, (rounding) errors)
+    - remove attribute values:
+        + genres: Music, Documentary, Wester, Sport, Musical, Short, Film-Noir.
+        + averageRating: remove films with rating lower than 5. i wasn't going to watch those anyway.
+        + category: remove production_manager, self, archive_footage
+        + jobs: only keep 
+    - nconst and tconst must be transformed to an integer
+        + nconst: just remove the nm part and leading 0's. Then convert to integer.
+        - tconst:just remove the tt part and leading 0's. Then convert to integer.
+    - genres to binary columns
+    - to int64: startYear, runtimeMinutes
+    - what to do with NA's? (endYear, job, birthYear, deathYear?)
+        + runtimeMinutes: fill them with whatever the mean version is of a Poisson distribution.
+        + averageRating: remove items with scores lower than 5.
+
+create new data:
+    - create new info from the birth- and deathyear (age at release, stil living etc.)
+    - create identifier from tconst, const and ...
+
+transform data:
+    - get rid of numvotes bias
+    - get rid of birthyear, deathyear bias
+    - round averageRating to nearest 0.5
+    - runtimeMinutes follows poisson distribution. 
+
+thinking:
+    transform data:
+        - substract 1900 from all years so the value is more representative?
+        - round some years to nearest 5?
+        - runtime minutes is practicly a Poisson distribution, make this standardized?
+            + what to do with the flat ends? replace them with the start/end of the distribution? (wait that fucks up the distribution..)
+            + fill missing values with Poisson version of the mean?
+        - make averageRating more like a Poison distribution by randomly taking out data??
+        - numVotes must be transformed. But both a high and low number of votes could give a bias. first remove very low numbers and outliers?
+    cleaning data:
+        - remove noise (outliers, stochastic, (rounding) errors)
+            + genre: remove categories: Action, Adventure, Crime, Drama, Comedy?
+            + category: remove categories: production_designer, self, archive_footage?
+            + category: join actor and actress and make new column gender
+            + some movies have way to many rows (200+) while others have a lot less (80-) would be better to take samples for every movie to even it out.
+            + a lot of duplicates have ordering 5, maybe we can do something with this.
+            + job: replace job categories that have less than 100 with empty. then replace them with category?
+    effects on score:
+        - does ordering have an effect?
+        - a lot of duplicates have ordering number 5.
+        - does gender (men, women, unknown) have an effect?

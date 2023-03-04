@@ -1,0 +1,7 @@
+1) update_all_files.py:
+    - downloads fresh copy of the iMDb database (if var set)
+    - updates /data/handcrafted/raw_status.xslsx
+2) generate_dataset.py:
+    - makes excel file for keeping track of watched movies
+    - makes file for datamining
+3) datamining to gain insights

@@ -6,6 +6,15 @@
 
 # general
 - (done) create a new branch
+- convert saved data files to parquet.
+- if still needed, set feature types immediately.
+- use parquet to only read specific columns and filter inmdiatly on rows (for score?).
+      df = pd.read_parquet("myfile.parquet", filters=[('col_name', '<', 42)])
+- use the pandas query function to filter.
+- remove redundancy
+- get rid of set1 = set1.group; set1 = set1.filter; etc.
+- write good pandas
+
 - convert 'generate_dataset.py' so it can be used with the ML pipeline.
 - make a processing script according to the example that can be used with the ML pipeline.
     - keep track of normalization steps and vars
@@ -50,7 +59,12 @@ transform data:
     - get rid of numvotes bias
     - get rid of birthyear, deathyear bias
     - round averageRating to nearest 0.5
-    - runtimeMinutes follows poisson distribution. 
+    - runtimeMinutes follows poisson distribution.
+    - birthyear: remove everything under 1900. drop na's. make 20 bins.
+    - name_basics: primary_profession:  - If the values are independent form eachother, then we must transform them to 1 row/value.
+                                        - If they are dependent on eachoter, then we must transform then as 1 column/value.
+    - title_basics: genre:  - If the values are independent form eachother, then we must transform them to 1 row/value.
+                            - If they are dependent on eachoter, then we must transform then as 1 column/value.
 
 thinking:
     transform data:

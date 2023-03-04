@@ -40,9 +40,6 @@ FILES_GENERATED = {
     "films_reading": "films_reading.xlsx"
 }
 
-# set this var if you want to download a fresh copy of the latest iMDb movie data
-DOWNLOAD = False
-
 
 def main():
     # 1 load and clean the watched movies data

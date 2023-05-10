@@ -1,3 +1,12 @@
+# current plan
+- 3 scripts:
+    1) update parquet files
+    2) add new movies using excell files
+    3) generate the movie list with up to date info
+- create a bash pipeline to generate an new movie update list
+- clean the folder and upload to github
+- continue with ml
+
 # interesting thing:
     the principles file only contains the 10 most important figures of the movie.
     it does not contain the entire crew
@@ -5,8 +14,14 @@
 
 
 # general
+- use two excell files to update the barebones movie list
+- update seen movies gives empty rows at top and bottom of file with watched status 1, very strange......
+- (done) convert update_movie_list.ipynb to a python file (compile_movie_list.py)
+- (done) redesign 'database'. Parqet works best with repeating values in columns. this also removes the need to do joins all the time. joins are expensive.
 - (done) create a new branch
-- convert saved data files to parquet.
+- (done) individual script for downloading data
+- (done) convert saved data files to parquet.
+- individual script that cleans the files (merge keys that are practically the same)
 - if still needed, set feature types immediately.
 - use parquet to only read specific columns and filter inmdiatly on rows (for score?).
       df = pd.read_parquet("myfile.parquet", filters=[('col_name', '<', 42)])

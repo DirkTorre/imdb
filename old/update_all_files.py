@@ -6,10 +6,12 @@
 
 todo: 
     - cleaningAndAddingSeenData() and cleaningAndAddingUnseenData() need to be made more efficient
+    - convert imdb files into a more database style tables
     - prepareImdbFiles() must be made less redundant
     - tsv files must be removed (implemented. does it work?)
     - make parts of the clean...() scripts that is common into new functions
     - use the () for the linked methods to make code more readable
+
 """
 
 
@@ -47,7 +49,7 @@ FILES_GENERATED = {
 }
 
 # set this var if you want to download a fresh copy of the latest iMDb movie data
-DOWNLOAD = False
+DOWNLOAD = True
 CONVERT = False
 REMOVETSV = False
 UPDATEWATCHLIST = False
@@ -92,7 +94,7 @@ def downloadFiles():
         os.makedirs("data/imdb")
     
     for file in FILES_IMDB.values():
-        file_name = os.path.join("data/imdb/",file)
+        file_name = os.path.join("data/imdb/download",file)
         file_zip = file_name+".gz"
         file_url = BASE_URL+file+".gz"
         

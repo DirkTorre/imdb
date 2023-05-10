@@ -1,0 +1,16 @@
+title.basics:   
+                - tconst: convert to string
+                - titleType be converted to an index from an different table.
+                - genres: to link table and own table
+name.basics:
+                - nconst: convert to string
+                - primaryProfession: to link table and own table
+                - knownForTitles: to link table and own table
+title.crew:     
+                - split in two tables: directors; writers with link tables
+title_principals:
+                - category to link table and own table
+                - job to link table and own table
+
+
+

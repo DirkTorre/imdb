@@ -17,6 +17,11 @@ The project was initiated because I am slowly running out of interesting movies 
 - Downloads fresh copy of the iMDb database.
 - Processes files and saves them as parquet.
 
+<b>add_to_movie_list.py</b>
+
+- Takes data/handcrafted/to_add.xlsx
+- Uses to_add.xlsx to update data/handcrafted/raw_status.xlsx
+
 <b>compile_movie_list.py</b>
 
 - Takes data/handcrafted/raw_status.xlsx

@@ -1,11 +1,9 @@
 # current plan
-- 3 scripts:
-    1) update parquet files
-    2) add new movies using excell files
-    3) generate the movie list with up to date info
-- create a bash pipeline to generate an new movie update list
+- test if the 3 scrips still work
 - clean the folder and upload to github
-- continue with ml
+- create a pipeline in Snakemake to stitch all the Python scripts together.
+- clean scripts and add documentation / comments
+- start ML in Python
 
 # interesting thing:
     the principles file only contains the 10 most important figures of the movie.
@@ -14,8 +12,8 @@
 
 
 # general
-- use two excell files to update the barebones movie list
-- update seen movies gives empty rows at top and bottom of file with watched status 1, very strange......
+- (done) use two excell files to update the barebones movie list
+- (done) update seen movies gives empty rows at top and bottom of file with watched status 1, very strange......
 - (done) convert update_movie_list.ipynb to a python file (compile_movie_list.py)
 - (done) redesign 'database'. Parqet works best with repeating values in columns. this also removes the need to do joins all the time. joins are expensive.
 - (done) create a new branch
@@ -42,7 +40,6 @@ data is exploded on:
     - writers
     - primaryProfession
     - knownForTitles
-    -
 
 # Data preparation
 

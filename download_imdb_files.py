@@ -146,57 +146,6 @@ def main():
             os.remove(os.path.join(DOWNLOAD_PATH,FILES_IMDB["name_bas"]))
         except:
             pass
-    
-
-
-
-
-
-# # this function can be removed
-# def downloadFiles():
-#     """ Downloads needed files and removes old files if already exist"""
-
-#     END_TIME = time.time()
-#     time_format = time.strftime("%H:%M:%S", time.gmtime(END_TIME-START_TIME))
-#     print("Execution time: ",time_format)
-#     print("start downloading")
-
-#     if not os.path.exists("data/imdb"):
-#         os.makedirs("data/imdb")
-    
-#     for file in FILES_IMDB.values():
-#         file_name = os.path.join("data/imdb/",file)
-#         file_zip = file_name+".gz"
-#         file_url = BASE_URL+file+".gz"
-        
-#         # remove old files
-#         if os.path.exists(file_name):
-#             os.remove(file_name)
-#         if os.path.exists(file_zip):
-#             os.remove(file_zip)
-        
-#         # download files
-#         response = requests.get(file_url)
-#         open(file_zip , "wb").write(response.content)
-
-#         # unzip files
-#         with gzip.open(file_zip, 'rb') as f_in:
-#             with open(file_name, 'wb') as f_out:
-#                 shutil.copyfileobj(f_in, f_out)
-        
-#         # remove zips
-#         os.remove(file_zip)
-
-#         END_TIME = time.time()
-#         time_format = time.strftime("%H:%M:%S", time.gmtime(END_TIME-START_TIME))
-#         print("DOWNLOADED: "+file_name)
-#         print("Execution time: ",time_format)
-    
-#     END_TIME = time.time()
-#     time_format = time.strftime("%H:%M:%S", time.gmtime(END_TIME-START_TIME))
-#     print("Execution time: ",time_format)
-#     print("end downloading")
-
 
 
 def setTNconst(df, key, set_index, drop_col):

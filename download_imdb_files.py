@@ -21,7 +21,7 @@ from datetime import timedelta
 START_TIME = time.time()
 
 DOWNLOAD = True
-REMOVE_GZ_TSV = False
+REMOVE_GZ_TSV = True
 
 BASE_URL = "https://datasets.imdbws.com/"
 PARQ_PATH = "data/imdb/parquet/"

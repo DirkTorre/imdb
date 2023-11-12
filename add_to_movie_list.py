@@ -1,3 +1,5 @@
+# There is a problem when there are duplicate tconst in the to add list
+
 import os
 import sys
 import time
@@ -61,7 +63,7 @@ def main():
     output = os.path.join("data", "handcrafted", FILES_HAND["raw_status"])
     raw_stat.sort_index().to_excel(output)
     
-    # empty to._add.xlsx
+    # empty to_add.xlsx
     new_empty = pd.DataFrame(data=None, columns=["link"]+to_add.columns.to_list())
     to_add = os.path.join("data", "handcrafted", FILES_HAND["to_add"])
     new_empty.to_excel(to_add, index=False)
@@ -70,7 +72,7 @@ def main():
 def setAttr(frame):
     # setting column types
     frame['watched_date'] = pd.to_datetime(frame['watched_date'])
-    frame['enjoyment'] = frame['enjoyment'].astype(float)
+    frame[['enjoyment','story','subject','acting','visual','action','comedy']] = frame[['enjoyment','story','subject','acting','visual','action','comedy']].astype(float)
     frame['watched'] = frame['watched'].astype("Int64").replace(0,np.nan)
     frame[['netflix','prime','priority']] = frame[['netflix','prime','priority']].astype("Int64")
     frame = frame.drop_duplicates()
@@ -143,7 +145,7 @@ def updateIndexedMovies(changed_rows, raw_stat):
 
     # clean the dataframe
     raw_stat.loc[:,['netflix','prime','priority']] = raw_stat.loc[:,['netflix','prime','priority']].replace(-1,pd.NA)
-    raw_stat["enjoyment"] = raw_stat["enjoyment"].replace(-1,np.NaN)
+    raw_stat[['enjoyment','story','subject','acting','visual','action','comedy']] = raw_stat[['enjoyment','story','subject','acting','visual','action','comedy']].replace(-1,np.NaN)
     raw_stat["watched_date"] = raw_stat["watched_date"].replace(pd.to_datetime("1900-1-1"), np.NaN)
 
     return raw_stat

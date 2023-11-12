@@ -1,0 +1,66 @@
+title basics:
+    - titleType: 
+        * remove this row.
+        * there are a a lot of tvEpisodesm which could skew the results.
+    - endyear: remove this column
+    - runtimeMinutes:
+        * replace missing values with ...
+        * there are two clusters of runtime minutes. What to do?
+        * remove outliers
+    - primaryTitle: drop
+    - originalTitle: drop
+    - isAsult: remove records that are adult.
+    - startYear:
+        * I have a bias for movies released in the last 10 years, i need to remove that bias to find interesting results.
+        * remove outliers.
+    - endYear: Drop. There is not enough data for it to be meaningful.
+
+genres:
+    * maybe remove all genres with less counts than animation?
+
+title_rate:
+    - averageRating: replace two lowest values (outliers) with the median.
+    - numVotes: replace the higher outliers with the median.
+
+writers & directors:
+    We take everything
+
+ordering:
+    - category:
+        * Keep: actor, producer, writer, actress, director
+    - nconst: keep the nconst's that occur 2 times or more
+    - ordering: probably better to remove this one.
+
+name_basics:
+    - primaryName: remove
+    - remove values that don't have a birthyear or deathyear (568)
+    - remove the values that have no birthyear but have a deathyear, because there are only 2.
+    - There are a lot of values that don't have a deathyear.
+        We can replace deathyear with an 'is alive column' and an age at filming column.
+
+
+primary_profession:
+    - keep:  producer, writer, actor, soundtrack, director, miscellaneous, actress, music_department, composer
+
+known_for:
+    - use this to figure out all the personell per movie !!!
+    - we can also use this to give actors an relative equal score, based on the movie score.
+
+directors:
+    Clean. Probably best to not use the directors information from the ordering file or the job file.
+
+writers:
+    clean. Use this instead of ordering and job file.
+
+job:
+    - needs to be cleaned, a lot.
+    - maybe better to not use it.
+
+character:
+    
+
+figuring out:
+    * Is it useful to give actors a score on basis of their ordering?
+    * can we give the actors a general score on their knownForTitles movies?
+
+

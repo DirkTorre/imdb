@@ -1,8 +1,9 @@
 # current plan
-- test if the 3 scrips still work
 - clean the folder and upload to github
+- convert to the new python and pandas
 - create a pipeline in Snakemake to stitch all the Python scripts together.
 - clean scripts and add documentation / comments
+- start the 'dit is een gaaf score systeem' writen down in quick_stats.ipynb
 - start ML in Python
 
 # interesting thing:
@@ -12,6 +13,8 @@
 
 
 # general
+- update_movie_list.py heeft een bug: # to_add['link'] = to_add['link'].str.split("/",expand=True).loc[:,4].astype(str) # keyerror: 4
+- werkt het ook met id's anders dan tt? >> vi2228618777
 - (done) use two excell files to update the barebones movie list
 - (done) update seen movies gives empty rows at top and bottom of file with watched status 1, very strange......
 - (done) convert update_movie_list.ipynb to a python file (compile_movie_list.py)
@@ -87,6 +90,7 @@ thinking:
             + fill missing values with Poisson version of the mean?
         - make averageRating more like a Poison distribution by randomly taking out data??
         - numVotes must be transformed. But both a high and low number of votes could give a bias. first remove very low numbers and outliers?
+        - older movies with a higher score will get more and better reviews because of reccommendation. try to normalize this?
     cleaning data:
         - remove noise (outliers, stochastic, (rounding) errors)
             + genre: remove categories: Action, Adventure, Crime, Drama, Comedy?

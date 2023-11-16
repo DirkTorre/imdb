@@ -1,6 +1,7 @@
 # current plan
 - clean the folder and upload to github
 - convert to the new python and pandas
+- progress bars
 - create a pipeline in Snakemake to stitch all the Python scripts together.
 - clean scripts and add documentation / comments
 - start the 'dit is een gaaf score systeem' writen down in quick_stats.ipynb

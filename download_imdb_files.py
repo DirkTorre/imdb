@@ -7,6 +7,7 @@ import time
 import gzip
 import sys
 import os
+from tqdm import tqdm
 
 START_TIME = time.time()
 
@@ -69,10 +70,11 @@ def main():
         "tit_prin" : [ convertOrdering, convertCharacter, convertJob ],
         }
 
+    print("File                 Job\tJob time\tTotal time")
+
     #  download and prepare files
     for file_key, file_value in FILES_IMDB.items():
         TEMP_START_TIME = time.time()
-        print("file: ",file_value)
 
         if DOWNLOAD:
             file_name = os.path.join(DOWNLOAD_PATH,file_value)
@@ -95,7 +97,10 @@ def main():
             END_TIME = time.time()
             part_time = time.strftime("%H:%M:%S", time.gmtime(END_TIME-TEMP_START_TIME))
             total_time = time.strftime("%H:%M:%S", time.gmtime(END_TIME-START_TIME))
-            print("\tdownload done. Ex. time: ",part_time, "\tTot. time: ",total_time)
+
+
+
+            print(file_value,(21-len(file_value))*" ","download\t", part_time, "\t",total_time, sep="")
             TEMP_START_TIME = time.time()
 
         # execute functions that are associated with the file
@@ -113,7 +118,7 @@ def main():
         END_TIME = time.time()
         part_time = time.strftime("%H:%M:%S", time.gmtime(END_TIME-TEMP_START_TIME))
         total_time = time.strftime("%H:%M:%S", time.gmtime(END_TIME-START_TIME))
-        print("\tconversion done. Ex. time: ",part_time, "\tTot. time: ",total_time)
+        print(21*" ","conversion\t", part_time, "\t",total_time, sep="")
         TEMP_START_TIME = time.time()
 
     if REMOVE_GZ_TSV:

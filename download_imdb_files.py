@@ -1,3 +1,5 @@
+# TODO: There is a lot of overlap between functions that can be replaced with a function.
+
 import pyarrow as pa
 import pandas as pd
 import numpy as np
@@ -7,7 +9,6 @@ import time
 import gzip
 import sys
 import os
-from tqdm import tqdm
 
 START_TIME = time.time()
 
@@ -48,6 +49,7 @@ def main():
     """ Downloads needed files and removes old files if they already exist. """
     END_TIME = time.time()
     TEMP_START_TIME = time.time()
+    print("File                 Job\tJob time\tTotal time")
 
     if not os.path.exists("data/imdb/download/"):
         os.makedirs("data/imdb/download")
@@ -69,8 +71,6 @@ def main():
         "name_bas" : [ convertNameBasics, convertIds ],
         "tit_prin" : [ convertOrdering, convertCharacter, convertJob ],
         }
-
-    print("File                 Job\tJob time\tTotal time")
 
     #  download and prepare files
     for file_key, file_value in FILES_IMDB.items():
@@ -189,7 +189,8 @@ def convertTitleRate():
     title_rate = setTNconst(title_rate, 'tconst', set_index=True, drop_col=True)
 
     # convert averageRating
-    title_rate['averageRating'] = title_rate['averageRating'].astype(pd.ArrowDtype(pa.float32()))
+    title_rate['averageRating'] = title_rate['averageRating'
+                                             ].astype(pd.ArrowDtype(pa.float32()))
 
     # convert numVotes
     title_rate['numVotes'] = title_rate['numVotes'].astype(pd.ArrowDtype(pa.uint32()))

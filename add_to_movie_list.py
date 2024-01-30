@@ -1,4 +1,11 @@
-# There is a problem when there are duplicate tconst in the to add list
+"""
+Takes movies from the to_add excel file and cleans it.
+The new movies are added and compared to excisting data
+using the same function used for cleaning the to_add excel file.
+Data gets written to the raw_status.xlsx file and the
+to_add.xlsx file gets cleared.
+"""
+
 
 import os
 import sys
@@ -40,9 +47,6 @@ FILES_IMDB_PARQ = {
 }
 
 FILES_HAND = {
-    "add_seen": "add_movies_seen.txt", # old
-    "add_unseen": "add_movies_unseen.txt", # old
-    "add_secop": "add_movies_second_opinion.txt", # old
     "raw_status": "raw_status.xlsx",
     "to_add" : "to_add.xlsx"
 }
@@ -53,101 +57,120 @@ FILES_GENERATED = {
 }
 
 
-def main():
-    # load and update data
-    to_add, raw_stat = loadData()
-    changed_rows, raw_stat = addNewAndGetChanged(to_add, raw_stat)
-    raw_stat = updateIndexedMovies(changed_rows, raw_stat)
-
-    # overwrite raw_status
-    output = os.path.join("data", "handcrafted", FILES_HAND["raw_status"])
-    raw_stat.sort_index().to_excel(output)
-    
-    # empty to_add.xlsx
-    new_empty = pd.DataFrame(data=None, columns=["link"]+to_add.columns.to_list())
-    to_add = os.path.join("data", "handcrafted", FILES_HAND["to_add"])
-    new_empty.to_excel(to_add, index=False)
-
-
 def setAttr(frame):
     # setting column types
     frame['watched_date'] = pd.to_datetime(frame['watched_date'])
     frame[['enjoyment','story','subject','acting','visual','action','comedy']] = frame[['enjoyment','story','subject','acting','visual','action','comedy']].astype(float)
     frame['watched'] = frame['watched'].astype("Int64").replace(0,np.nan)
     frame[['netflix','prime','priority']] = frame[['netflix','prime','priority']].astype("Int64")
-    frame = frame.drop_duplicates()
     return frame
 
 
 def loadData():
     """Loads the raw excel files."""
-    # loading and preparing films to add
+    # load data and set types of films to add
     id_stat = os.path.join("data", "handcrafted", FILES_HAND["to_add"])
-    to_add = pd.read_excel(id_stat)
-    to_add = setAttr(to_add)
+    to_add = setAttr(pd.read_excel(id_stat))
+    # convert link to tconstant
     to_add['link'] = to_add['link'].str.split("/",expand=True).loc[:,4].astype(str)
-    to_add = to_add.rename(columns={"link":"tconst"}).set_index("tconst")
+    # remove duplicates
+    to_add = to_add.drop_duplicates().rename(columns={"link":"tconst"})
+    # add index as column
+    to_add["row_index"] = to_add.index
+    to_add = to_add.set_index("tconst")
+    # set nan to 0
+    to_add.loc[:,['priority', 'watched']] = to_add.loc[:,['priority', 'watched']].fillna(0)
 
     # loading and preparing film list
     raw_stat_link = os.path.join("data", "handcrafted", FILES_HAND["raw_status"])
-    raw_stat = pd.read_excel(raw_stat_link)
-    raw_stat = setAttr(raw_stat)
-    raw_stat = raw_stat.set_index("tconst")
+    raw_stat = setAttr(pd.read_excel(raw_stat_link))
+    raw_stat = raw_stat.drop_duplicates().set_index("tconst")
+    # set nan to 0
+    raw_stat.loc[:,['priority', 'watched']] = raw_stat.loc[:,['priority', 'watched']].fillna(0)
 
     return to_add, raw_stat
 
 
-def addNewAndGetChanged(to_add, raw_stat):
-    """Adds new movies to raw_stat, and get movies that need to be updated."""
-    # adding new films and creating a subset of films to update
-    direct_toevoegen = to_add[~to_add.index.isin(raw_stat.index)]
-    door_scanner = to_add[to_add.index.isin(raw_stat.index)]
-    raw_stat = pd.concat([raw_stat, direct_toevoegen])
+def removeDuplicates(to_add):
+    """
+    This function remove duplcate values for the movie dataframe.
+    If a list contains rows with duplicate imdb id's, it checks
+    if one of the rows has a a 1/true for watched, priority, netflix
+    or prime, all the corresponding row also get that value.
+    If the id has scores, it will take the most up to date score available.
+    This is either the movie with the last watch date, or the movie lowest in the file.
+    This results in a lot of dupplicate rows, which get filtered out, leaving a updated record.
+    """
+    # the new and improved function 26 jan 2024
+    # fixing watched, priority, netflix, prime
+    
 
-    # preparing data for comparison
-    door_scanner = door_scanner.fillna(-1)
-    door_scanner.loc[:,"watched"] = door_scanner.loc[:,"watched"].replace(-1,0)
-    door_scanner.loc[:,"watched_date"] = door_scanner.loc[:,"watched_date"].replace(-1,pd.to_datetime("1/1/1900"))
+    # Because new data is appended at the end,
+    # we can identify new data by a bigger row number.
+    if "row_index" not in to_add.columns:
+        to_add["row_index"] = range(to_add.shape[0])
 
-    raw_stat = raw_stat.fillna(-1)
-    raw_stat.loc[:,"watched"] = raw_stat.loc[:,"watched"].replace(-1,0)
-    raw_stat.loc[:,"watched_date"] = raw_stat.loc[:,"watched_date"].replace(-1,pd.to_datetime("1/1/1900"))
+    # Replace corresponding value for the column with highest value
+    # (if a movie has a 1, all duplicates get to be 1)
+    for col_name in ["watched", "priority", "netflix", "prime"]:
+        new = (to_add
+            .sort_values(["tconst", col_name],ascending=False)
+            .reset_index()
+            .drop_duplicates(subset=["tconst"],keep="first")
+            .loc[:,["tconst", col_name]])
+        to_add.update(new.set_index("tconst"), overwrite=True)
 
-    # get the movies for adding that are already in the movie list
-    identical_rows = pd.merge(door_scanner.reset_index(drop=False),
-                            raw_stat.reset_index(drop=False),
-                            on=door_scanner.reset_index(drop=False).columns.values.tolist(),
-                            how='inner')['tconst']
-    changed_rows = door_scanner[~door_scanner.index.isin(identical_rows)]
+    # Keep the score with the most current date.
+    # If there is no date, it searches for the record lowest on the record.
+    for score_cat in ["enjoyment", "story", "subject", "acting", "visual", "action", "comedy"]:
+        new_score = (to_add.sort_values(["tconst","watched_date","row_index"],ascending=False)
+                     .reset_index()
+                     .loc[:,["tconst", score_cat]]
+                     .dropna()
+                     .drop_duplicates(subset=["tconst"],keep="first"))
+        to_add.update(new_score.set_index("tconst"), overwrite=True)
 
-    return changed_rows, raw_stat
+    # effective way of assigning the latest date to a movie.
+    # keep in mind that this must be done at the end, otherwise is screws over the ordering.
+    new_watched_date_values = (to_add
+                               .reset_index()
+                               .sort_values(["tconst","watched_date"],ascending=False)
+                               .drop_duplicates(subset=["tconst"],keep="first")[["tconst","watched_date"]]
+                               .set_index("tconst"))
+    to_add.update(new_watched_date_values)
 
-def updateIndexedMovies(changed_rows, raw_stat):
-    # Update movie info
-    for index, row in changed_rows.iterrows():
-        # if movie is watched, also make it watched in original list
-        if changed_rows.loc[index,"watched"] == 1:
-            raw_stat.loc[index,"watched"] = 1
-        # if watch date of new one is bigger, replace old with new date
-        if changed_rows.loc[index,"watched_date"]  > raw_stat.loc[index,"watched_date"]:
-            raw_stat.loc[index,"watched_date"] = changed_rows.loc[index,"watched_date"]
-        # only update neflix/prime status if status is not null (3)
-        if changed_rows.loc[index, "netflix"] != -1:
-            raw_stat.loc[index,"netflix"] = changed_rows.loc[index,"netflix"]
-        if changed_rows.loc[index, "prime"] != -1:
-            raw_stat.loc[index,"prime"] = changed_rows.loc[index,"prime"]
-        # only update enjoyment is new value is not NA (-1)
-        if changed_rows.loc[index, "enjoyment"] != -1:
-            raw_stat.loc[index,"enjoyment"] = changed_rows.loc[index,"enjoyment"]
-        # only update priority if old value is NA:
-        if raw_stat.loc[index,"priority"] not in [-1, 1]:
-            raw_stat.loc[index,"priority"] = changed_rows.loc[index,"priority"]
+    # drop row_index column
+    to_add = to_add.drop(columns="row_index")
 
-    # clean the dataframe
-    raw_stat.loc[:,['netflix','prime','priority']] = raw_stat.loc[:,['netflix','prime','priority']].replace(-1,pd.NA)
-    raw_stat[['enjoyment','story','subject','acting','visual','action','comedy']] = raw_stat[['enjoyment','story','subject','acting','visual','action','comedy']].replace(-1,np.NaN)
-    raw_stat["watched_date"] = raw_stat["watched_date"].replace(pd.to_datetime("1900-1-1"), np.NaN)
+    # remove rows that have no data
+    to_add = to_add[to_add.index!="nan"]
 
-    return raw_stat
+    # removing duplicates
+    return to_add.reset_index().drop_duplicates(ignore_index=False).set_index("tconst")
+
+
+def main():
+    # Loading data
+    to_add, raw_stat = loadData()
+
+    # removing duplicates in the file that has new movies to add.
+    to_add = removeDuplicates(to_add)
+
+    # Merge the old data with the new data.
+    # Keep in mind that duplicates that were in in raw_stat from the start are also removed.
+    # It's important to add the newest data at the end.
+    # This is because we are going to number the rows.
+    # Older data get's a higher number.
+    raw_stat = removeDuplicates(pd.concat([raw_stat, to_add]))
+
+    # overwrite raw_status
+    output = os.path.join("data", "handcrafted", FILES_HAND["raw_status"])
+    raw_stat.sort_index().to_excel(output)
+
+    # empty to_add.xlsx
+    new_empty = pd.DataFrame(data=None, columns=["link"]+to_add.columns.to_list())
+    to_add = os.path.join("data", "handcrafted", FILES_HAND["to_add"])
+    new_empty.to_excel(to_add, index=False)
+
 
 main()

@@ -1,7 +1,8 @@
 # current plan
 - convert to the new python and pandas
-- - continue with add_to_movie_list.py
+- - continue with compile_movie_list.py
 - clean the folder and upload to github
+- use the data classes to remove redundancy of the path files in every script.
 - create a pipeline in Snakemake to stitch all the Python scripts together.
 - clean scripts and add documentation / comments
 - start the 'dit is een gaaf score systeem' writen down in quick_stats.ipynb

@@ -1,6 +1,11 @@
+# IMPORTANT NOTE:
+tracking of improvements is now done in JIRA Software web app.
+
+
 # current plan
 - 1) convert to the new python and pandas:
     - (done) test the 'pipeline'
+    - (done) clean compile_movie_list.py
     - clean the folder
     - upload to github
     - merge with master
@@ -19,7 +24,6 @@
     https://pythontic.com/pandas/serialization/postgresql
     https://dlwhittenbury.github.io/imdb-3-building-the-imdb-mysql-database.html
     https://medium.com/@koustavin/imdb-sql-data-analysis-database-design-492751ab16c4
-- create a pipeline in Snakemake to stitch all the Python scripts together.
 - start the 'dit is een gaaf score systeem' writen down in quick_stats.ipynb
 - start ML in Python
 - create GUI

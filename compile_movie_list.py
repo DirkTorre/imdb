@@ -56,6 +56,8 @@ FILES_GENERATED = {
 
 def main():
     """The method takes in a lot of data paths."""
+    # TODO: this can be improved using a Python Dictionary Comprehension.
+    # For now I'm not going to use it because i plan to change the dictionary into a dataclass.
     id_stat =       os.path.join("data", "handcrafted", FILES_HAND["raw_status"])
     const =         os.path.join(PARQ_PATH, FILES_IMDB_PARQ["const"])
     tit_bas =       os.path.join(PARQ_PATH, FILES_IMDB_PARQ["tit_bas"])
@@ -65,9 +67,7 @@ def main():
     writers =       os.path.join(PARQ_PATH, FILES_IMDB_PARQ["writers"])
     personnel =     os.path.join(PARQ_PATH, FILES_IMDB_PARQ["ordering"])
     name_basics =   os.path.join(PARQ_PATH, FILES_IMDB_PARQ["name_bas"])
-    output_excel =   os.path.join(OUTPUT_PATH, FILES_GENERATED["films_reading"])
-    # for test
-    # output_excel =   os.path.join(OUTPUT_PATH, "test.xlsx")
+    output_excel =  os.path.join(OUTPUT_PATH, FILES_GENERATED["films_reading"])
 
     # Make a instance
     test = AppendedMovieList(
@@ -122,15 +122,15 @@ class AppendedMovieList():
 
 
 
-        self._loadList()
-        self._addMovieIds()
-        self._addTitleBasics()
-        self._addRating()
-        self._addGenre()
-        self._addPersonnel()
+        self.__loadList()
+        self.__addMovieIds()
+        self.__addTitleBasics()
+        self.__addRating()
+        self.__addGenre()
+        self.__addPersonnel()
 
 
-    def _loadList(self):
+    def __loadList(self):
         # load the raw movie list
         self.__movie_list = pd.read_excel(self.url_movie_list)
 
@@ -138,7 +138,7 @@ class AppendedMovieList():
         self.__movie_list['watched_date'] = self.__movie_list['watched_date'].dt.date
 
 
-    def _addMovieIds(self):
+    def __addMovieIds(self):
         # load movieID's
         const = pd.read_parquet(self.url_imdb_ids)
         
@@ -151,7 +151,7 @@ class AppendedMovieList():
         self.__movie_list = self.__movie_list.set_index('intid', drop=True)
     
 
-    def _addTitleBasics(self):
+    def __addTitleBasics(self):
         # load title basics
         tit_bas = pd.read_parquet(self.url_title_basics)
 
@@ -163,7 +163,7 @@ class AppendedMovieList():
                                      how='left', left_index=True, right_index=True)
     
 
-    def _addRating(self):
+    def __addRating(self):
         # load ratings
         tit_rate = pd.read_parquet(self.url_title_rate)
 
@@ -176,7 +176,7 @@ class AppendedMovieList():
         self.__movie_list["numVotes"] = self.__movie_list["numVotes"].astype('Int64')
 
 
-    def _addGenre(self):
+    def __addGenre(self):
         # load genres
         genre = pd.read_parquet(self.url_genre)
 
@@ -197,24 +197,22 @@ class AppendedMovieList():
         self.__movie_list = pd.merge(self.__movie_list, genre, how='left', left_index=True, right_index=True)
 
 
-    def _loadPersonnel(self):
-        # load neaded directors
-        directors = pd.read_parquet(self.url_directors)
-        directors = directors[directors.index.isin(self.__movie_list.index)]
-        directors['category'] = 'director'
-        directors = directors.rename(columns={'directors':'nconst'})
+    def __load_personnel(self, category, url, column):
+        """Loads directors and writers, depending on the category string"""
+        personnel = pd.read_parquet(url)
+        personnel = personnel[personnel.index.isin(self.__movie_list.index)]
+        personnel['category'] = category
+        personnel = personnel.rename(columns={column:'nconst'})
+        return personnel
 
-        # load needed writers
-        writers = pd.read_parquet(self.url_writers)
-        writers = writers[writers.index.isin(self.__movie_list.index)]
-        writers['category'] = 'writer'
-        writers = writers.rename(columns={'writers':'nconst'})
-
-        # load needed ordering
+    def __loadPersonnel(self):
+        # load the data
+        directors = self.__load_personnel('director', self.url_directors, 'directors')
+        writers = self.__load_personnel('writer', self.url_writers, 'writers')
         personnel = pd.read_parquet(self.url_personnel)
         personnel = personnel[personnel.index.isin(self.__movie_list.index)].drop(columns='ordering')
 
-        # combine personell id's
+        # combine all personnel
         all_personnel = pd.concat([writers, directors, personnel])
         all_personnel = all_personnel.drop_duplicates()
         all_personnel.loc[:,'category'] = all_personnel.loc[:,'category'].astype('category')
@@ -222,9 +220,9 @@ class AppendedMovieList():
         return all_personnel
     
     
-    def _addPersonnel(self):
+    def __addPersonnel(self):
         # prepare personell ids
-        all_personnel = self._loadPersonnel()
+        all_personnel = self.__loadPersonnel()
 
         # get needed personell info
         name_bas = pd.read_parquet(self.url_name_basics)

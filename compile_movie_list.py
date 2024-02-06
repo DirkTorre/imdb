@@ -66,6 +66,7 @@ def main():
     personnel =     os.path.join(PARQ_PATH, FILES_IMDB_PARQ["ordering"])
     name_basics =   os.path.join(PARQ_PATH, FILES_IMDB_PARQ["name_bas"])
     output_excel =   os.path.join(OUTPUT_PATH, FILES_GENERATED["films_reading"])
+    # for test
     # output_excel =   os.path.join(OUTPUT_PATH, "test.xlsx")
 
     # Make a instance
@@ -181,10 +182,16 @@ class AppendedMovieList():
 
         # get needed ones
         genre = genre[genre.index.isin(self.__movie_list.index)]
-        genre['genre'] = genre['genre'].astype('category')
+        genre['genres'] = genre['genres'].astype('category')
 
         # convert to multi one-hot
-        genre = pd.crosstab(genre.index, genre['genre'])
+        genre = pd.crosstab(genre.index, genre['genres'])
+
+        # NOTE:
+        # Column values of a this particular crosstab are categorical.
+        # This does not play nice with the merge function
+        # So we have to change change it back to a normal list
+        genre.columns = genre.columns.values.tolist()
         
         # add genre
         self.__movie_list = pd.merge(self.__movie_list, genre, how='left', left_index=True, right_index=True)

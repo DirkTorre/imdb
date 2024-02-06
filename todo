@@ -1,12 +1,19 @@
 # current plan
-- convert to the new python and pandas
-- - continue with compile_movie_list.py
+- convert to the new python and pandas:
+    - test the 'pipeline'
 - clean the folder and upload to github
-- use the data classes to remove redundancy of the path files in every script.
+- improve the code:
+    - code does not work with tags other than nm and tt, but an vi-id technically isn't a good thing to use, so maybe i should give the user a warning?
+      just use the string as index, instead of converting it to an int.
+      can always change it when i'm going to use a database.
+    - use the data classes to remove redundancy of the path files in every script.
+    - implement the pandas pipe function https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.pipe.html
+    - create and/or remove OOP
 - create a pipeline in Snakemake to stitch all the Python scripts together.
 - clean scripts and add documentation / comments
 - start the 'dit is een gaaf score systeem' writen down in quick_stats.ipynb
 - start ML in Python
+- create GUI
 
 # interesting thing:
     the principles file only contains the 10 most important figures of the movie.

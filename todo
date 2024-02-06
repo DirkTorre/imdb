@@ -1,16 +1,25 @@
 # current plan
-- convert to the new python and pandas:
-    - test the 'pipeline'
-- clean the folder and upload to github
-- improve the code:
-    - code does not work with tags other than nm and tt, but an vi-id technically isn't a good thing to use, so maybe i should give the user a warning?
+- 1) convert to the new python and pandas:
+    - (done) test the 'pipeline'
+    - clean the folder
+    - upload to github
+    - merge with master
+- 2) improve the code:
+    - 0) make sure that the newly added column in to_add works.
+    - 1) use the data classes to remove redundancy of the path files in every script.
+    - 2) code does not work with tags other than nm and tt, but an vi-id technically isn't a good thing to use, so maybe i should give the user a warning?
       just use the string as index, instead of converting it to an int.
       can always change it when i'm going to use a database.
-    - use the data classes to remove redundancy of the path files in every script.
-    - implement the pandas pipe function https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.pipe.html
-    - create and/or remove OOP
+    - 3) implement the pandas pipe function https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.pipe.html
+    - 4) create and/or remove OOP
+    - 5) use logging to file with the dedicated logging method instead of a print to terminal
+    - 6) clean scripts and add documentation / comments
+- 3) further adjustments:
+- use a database instead of parque files:
+    https://pythontic.com/pandas/serialization/postgresql
+    https://dlwhittenbury.github.io/imdb-3-building-the-imdb-mysql-database.html
+    https://medium.com/@koustavin/imdb-sql-data-analysis-database-design-492751ab16c4
 - create a pipeline in Snakemake to stitch all the Python scripts together.
-- clean scripts and add documentation / comments
 - start the 'dit is een gaaf score systeem' writen down in quick_stats.ipynb
 - start ML in Python
 - create GUI
@@ -22,7 +31,7 @@
 
 
 # general
-- update_movie_list.py heeft een bug: # to_add['link'] = to_add['link'].str.split("/",expand=True).loc[:,4].astype(str) # keyerror: 4
+- (done) update_movie_list.py heeft een bug: # to_add['link'] = to_add['link'].str.split("/",expand=True).loc[:,4].astype(str) # keyerror: 4
 - werkt het ook met id's anders dan tt? >> vi2228618777
 - tt-codes die (nog) niet in parquet files staan niet verwijderen uit lijst, ook een checkmark geven dat ze nog niet in huidige imdb database staan.
 - (done) use two excell files to update the barebones movie list

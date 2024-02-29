@@ -6,7 +6,6 @@ Data gets written to the raw_status.xlsx file and the
 to_add.xlsx file gets cleared.
 """
 
-
 import os
 import sys
 import time
@@ -60,7 +59,7 @@ FILES_GENERATED = {
 def setAttr(frame):
     # setting column types
     frame['watched_date'] = pd.to_datetime(frame['watched_date'])
-    frame[['enjoyment','story','subject','acting','visual','action','comedy']] = frame[['enjoyment','story','subject','acting','visual','action','comedy']].astype(float)
+    frame[['enjoyment','story','subject','acting','script','visual','action','comedy']] = frame[['enjoyment','story','subject','acting','script','visual','action','comedy']].astype(float)
     frame['watched'] = frame['watched'].astype("Int64").replace(0,np.nan)
     frame[['netflix','prime','priority']] = frame[['netflix','prime','priority']].astype("Int64")
     return frame
@@ -103,7 +102,6 @@ def removeDuplicates(to_add):
     """
     # the new and improved function 26 jan 2024
     # fixing watched, priority, netflix, prime
-    
 
     # Because new data is appended at the end,
     # we can identify new data by a bigger row number.
@@ -122,7 +120,7 @@ def removeDuplicates(to_add):
 
     # Keep the score with the most current date.
     # If there is no date, it searches for the record lowest on the record.
-    for score_cat in ["enjoyment", "story", "subject", "acting", "visual", "action", "comedy"]:
+    for score_cat in ["enjoyment", "story", "subject", "acting", "script", "visual", "action", "comedy"]:
         new_score = (to_add.sort_values(["tconst","watched_date","row_index"],ascending=False)
                      .reset_index()
                      .loc[:,["tconst", score_cat]]
@@ -149,9 +147,18 @@ def removeDuplicates(to_add):
     return to_add.reset_index().drop_duplicates(ignore_index=False).set_index("tconst")
 
 
+def checkLinks(to_add):
+    # TODO # check if to_add file does not contain vi links
+    pass
+
+
 def main():
     # Loading data
     to_add, raw_stat = loadData()
+
+    
+    # TODO: create checkLinks function 
+    # checkLinks(to_add)
 
     # removing duplicates in the file that has new movies to add.
     to_add = removeDuplicates(to_add)

@@ -3,13 +3,7 @@ tracking of improvements is now done in JIRA Software web app.
 
 
 # current plan
-- 1) convert to the new python and pandas:
-    - (done) test the 'pipeline'
-    - (done) clean compile_movie_list.py
-    - clean the folder
-    - upload to github
-    - merge with master
-- 2) improve the code:
+- 1) improve the code:
     - 0) make sure that the newly added column in to_add works.
     - 1) use the data classes to remove redundancy of the path files in every script.
     - 2) code does not work with tags other than nm and tt, but an vi-id technically isn't a good thing to use, so maybe i should give the user a warning?
@@ -19,7 +13,7 @@ tracking of improvements is now done in JIRA Software web app.
     - 4) create and/or remove OOP
     - 5) use logging to file with the dedicated logging method instead of a print to terminal
     - 6) clean scripts and add documentation / comments
-- 3) further adjustments:
+- 2) further adjustments:
 - use a database instead of parque files:
     https://pythontic.com/pandas/serialization/postgresql
     https://dlwhittenbury.github.io/imdb-3-building-the-imdb-mysql-database.html

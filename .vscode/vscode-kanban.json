@@ -1,0 +1,16 @@
+{
+  "todo": [
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-02-22T11:15:06.702Z",
+      "id": "1",
+      "references": [],
+      "title": "001 create a new branch and setup uv"
+    }
+  ],
+  "in-progress": [],
+  "testing": [],
+  "done": []
+}

@@ -32,3 +32,5 @@ To run any script use:
 uv run <file + path>
 ```
 
+
+

@@ -32,5 +32,4 @@ To run any script use:
 uv run <file + path>
 ```
 
-
-
+TODO: the code in load.ipynb must be converted to a function

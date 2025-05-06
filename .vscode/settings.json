@@ -14,10 +14,15 @@
     // linting
     "[python]": {
     "editor.formatOnSave": false,
-    "editor.defaultFormatter": "charliermarsh.ruff"
+    "editor.defaultFormatter": "charliermarsh.ruff",
     },
+
+    "python.linting.ruffEnabled": true,
+    "python.linting.enabled": true,
+
     // kanban extention
     "kanban": {
         "openOnStartup": true
-    }
+    },
+    "ruff.lint.preview": true
 }

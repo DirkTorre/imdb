@@ -4,19 +4,10 @@
       "assignedTo": {
         "name": "DirkTorre"
       },
-      "creation_time": "2025-05-05T19:42:13.569Z",
-      "id": "4",
+      "creation_time": "2025-05-06T22:30:59.562Z",
+      "id": "8",
       "references": [],
-      "title": "004 create compile excel module"
-    },
-    {
-      "assignedTo": {
-        "name": "DirkTorre"
-      },
-      "creation_time": "2025-05-05T19:42:35.199Z",
-      "id": "5",
-      "references": [],
-      "title": "005 write tests"
+      "title": "006 clean code"
     },
     {
       "assignedTo": {
@@ -25,20 +16,19 @@
       "creation_time": "2025-05-06T15:33:42.128Z",
       "id": "7",
       "references": [],
-      "title": "document code modules"
-    }
-  ],
-  "in-progress": [
+      "title": "007 document code modules"
+    },
     {
       "assignedTo": {
         "name": "DirkTorre"
       },
-      "creation_time": "2025-05-05T21:09:54.361Z",
-      "id": "6",
+      "creation_time": "2025-05-05T19:42:35.199Z",
+      "id": "5",
       "references": [],
-      "title": "004 create load imdb module"
+      "title": "008 write tests"
     }
   ],
+  "in-progress": [],
   "testing": [
     {
       "assignedTo": {
@@ -61,6 +51,24 @@
       "id": "3",
       "references": [],
       "title": "003 create load watch data csv module"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-05T21:09:54.361Z",
+      "id": "6",
+      "references": [],
+      "title": "004 create load imdb module"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-05T19:42:13.569Z",
+      "id": "4",
+      "references": [],
+      "title": "005 create compile excel module"
     }
   ],
   "done": [

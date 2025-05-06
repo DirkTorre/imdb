@@ -18,4 +18,6 @@ def getDateScores(file_path: Path):
         "enjoyment_score": pd.Float32Dtype(),
         "quality_score": pd.Float32Dtype()
         }
-    return pd.read_csv(file_path, dtype=dtypes, index_col="tconst", parse_dates=['date'], date_format="%Y-%m-%d")
+    date_scores = pd.read_csv(file_path, dtype=dtypes, index_col="tconst", parse_dates=['date'], date_format="%Y-%m-%d")
+    date_scores['date'] = pd.to_datetime(date_scores['date']).dt.date
+    return date_scores

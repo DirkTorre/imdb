@@ -1,0 +1,22 @@
+[project]
+name = "imdb"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = "==3.12.9"
+dependencies = [
+    "pandas>=2.2.3",
+    "pyarrow>=20.0.0",
+    "pypdl>=1.5.3",
+    "xlsxwriter>=3.2.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "ruff>=0.11.8",
+    "ipykernel>=6.29.5",
+]
+
+[tool.pytest.ini_options]
+pythonpath = "src"

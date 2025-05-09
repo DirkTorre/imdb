@@ -1,46 +1,61 @@
-# IMDb data project.
+# IMDb project
 
-## Project to learn new Python skills
+A project to create a nice spreadsheet of information about movies I want to watch.
+The spreadsheet is used to quickly find a movie on movie night with family or friends.
 
-To guide my project I set some goals that can help me with my hobby.
-The project was initiated because I am slowly running out of interesting movies to watch.
 
-### Goals
+## Goals of the program
 
-1. Add IMDb data to my movie list.
-2. Make process of fully updating the movie list automated.
-3. Use ML to find new interesting movies.
+- Updating an excel file with information about movies I have and want to watch.
+- Excel file should filled with information about the movie using IMDB data
+- Excel file should have 2 tabs:
+    - One with watch status and info of all my movies
+    - One with states the dates I watched a movie
+- Create a visualization with movie recommendations from my list.
 
-## Files
-<b>download_imdb_files.py</b>
+## user guide
 
-- Downloads fresh copy of the iMDb database.
-- Processes files and saves them as parquet.
+Install the environment (see the env commands section).
 
-<b>add_to_movie_list.py</b>
+Add movie info of your watch list to /data/downloads/sheets/status.csv.
+A o represent not and 1 represents yes/watched/etc.
+Only add the id of the movie, which can be found at the [imdb.com](https://www.imdb.com/title/tt0057012/?ref_=nv_sr_srsg_0_tt_8_nm_0_in_0_q_dr%2520strangel) in the url of the movie.
 
-- Takes data/handcrafted/to_add.xlsx
-- Uses to_add.xlsx to update data/handcrafted/raw_status.xlsx
+Add dates (and scores) of watched movies to /data/downloads/sheets/status.csv.
+Date format must be `<year>-<month>-<day>`.
 
-<b>compile_movie_list.py</b>
+Run the script in the main folder: `uv run main -d`.
+The -d flag is needed to download a fresh copy of needed IMDb data.
+Only use the -d flag when it's possible a new movie is not in the dataset.
 
-- Takes data/handcrafted/raw_status.xlsx
-- Adds info from IMDb parquet files.
-- Generates films_data/generated/films_reading.xlsx
+An excel is generated: `/data/sheets/watch_list_<date+time>`.
+The excel can be used to sort and filter the data to quickly find a movie you want to watch.
 
-<b>cheat_sheet.txt</b>
 
-- Contains reference code and tips.
+## kanban board
 
-<b>Folder: data</b>
+Keeping track of tasks if managed with the VSCode extension Kanban made by Marcel J. Kloubert.
 
-Contains handcrafted files and will contain downloaded files at executing download_imdb_files.py.
+## env commands 
 
-<b>Folder: database</b>
+This project uses uv as a package manager.
+Information on how to install uv [can be found here](https://docs.astral.sh/uv/getting-started/installation/).
 
-Contains ideas on how to order the data
+To create or sync the environment with the dependencies use:
 
-<b>Folder: old</b>
+```bash
+uv sync
+```
 
-Contains testing scripts and scripts with attempts at data processing, cleaning, mining, and ML.
-It containes outdated scripts and will be cleaned in the long run.
+To run the project use:
+
+```bash
+uv run main
+```
+
+
+To run any script use:
+
+```bash
+uv run <file + path>
+```

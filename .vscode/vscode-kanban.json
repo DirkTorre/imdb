@@ -1,0 +1,126 @@
+{
+  "todo": [
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-05T19:42:35.199Z",
+      "id": "5",
+      "references": [],
+      "title": "008 write tests"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-07T09:12:57.854Z",
+      "description": {
+        "content": "a dashboards with movies per genre (collapsable).",
+        "mime": "text/markdown"
+      },
+      "id": "12",
+      "references": [],
+      "title": "012 create a recommondation script that generates a visualisation."
+    }
+  ],
+  "in-progress": [
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-07T09:06:34.128Z",
+      "id": "11",
+      "references": [],
+      "title": "011 generate docfile, edit readme, and merge to main, clean branches"
+    }
+  ],
+  "testing": [
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-01T10:34:11.224Z",
+      "description": {
+        "content": "module for downloading the imdb files.",
+        "mime": "text/markdown"
+      },
+      "id": "2",
+      "references": [],
+      "title": "002 create download module"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-05T19:40:04.102Z",
+      "id": "3",
+      "references": [],
+      "title": "003 create load watch data csv module"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-05T21:09:54.361Z",
+      "id": "6",
+      "references": [],
+      "title": "004 create load imdb module"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-05T19:42:13.569Z",
+      "id": "4",
+      "references": [],
+      "title": "005 create compile excel module"
+    }
+  ],
+  "done": [
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-02-22T11:15:06.702Z",
+      "id": "1",
+      "references": [],
+      "title": "001 create a new branch and setup uv"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-06T22:30:59.562Z",
+      "id": "8",
+      "references": [],
+      "title": "006 clean code"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-06T15:33:42.128Z",
+      "id": "7",
+      "references": [],
+      "title": "007 document code modules"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-07T08:59:43.469Z",
+      "id": "9",
+      "references": [],
+      "title": "009 remove unneeded files"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-07T09:06:10.013Z",
+      "id": "10",
+      "references": [],
+      "title": "010 add logging to console"
+    }
+  ]
+}

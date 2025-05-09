@@ -13,33 +13,6 @@
       "assignedTo": {
         "name": "DirkTorre"
       },
-      "creation_time": "2025-05-07T08:59:43.469Z",
-      "id": "9",
-      "references": [],
-      "title": "009 remove unneeded files"
-    },
-    {
-      "assignedTo": {
-        "name": "DirkTorre"
-      },
-      "creation_time": "2025-05-07T09:06:10.013Z",
-      "id": "10",
-      "references": [],
-      "title": "010 add logging to console"
-    },
-    {
-      "assignedTo": {
-        "name": "DirkTorre"
-      },
-      "creation_time": "2025-05-07T09:06:34.128Z",
-      "id": "11",
-      "references": [],
-      "title": "011 generate docfile, edit readme, and merge to main, clean branches"
-    },
-    {
-      "assignedTo": {
-        "name": "DirkTorre"
-      },
       "creation_time": "2025-05-07T09:12:57.854Z",
       "description": {
         "content": "a dashboards with movies per genre (collapsable).",
@@ -50,7 +23,17 @@
       "title": "012 create a recommondation script that generates a visualisation."
     }
   ],
-  "in-progress": [],
+  "in-progress": [
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-07T09:06:34.128Z",
+      "id": "11",
+      "references": [],
+      "title": "011 generate docfile, edit readme, and merge to main, clean branches"
+    }
+  ],
   "testing": [
     {
       "assignedTo": {
@@ -120,6 +103,24 @@
       "id": "7",
       "references": [],
       "title": "007 document code modules"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-07T08:59:43.469Z",
+      "id": "9",
+      "references": [],
+      "title": "009 remove unneeded files"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-07T09:06:10.013Z",
+      "id": "10",
+      "references": [],
+      "title": "010 add logging to console"
     }
   ]
 }

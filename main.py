@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import datetime
+import argparse
 
 import src.imdb.download as download
 import src.imdb.load as load
@@ -10,15 +11,23 @@ import src.read_write.excel as read_write_excel
 def main() -> None:
     """Main function to process and generate the watch list."""
 
+    parser = argparse.ArgumentParser(description="Just an example",
+                                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("-d", "--download", action="store_true", help="Downloads a fresh IMDb dataset")
+    args = vars(parser.parse_args())
+
     # Define file paths
     base_path = Path(__file__).parent.resolve()
     imdb_files_path = base_path / "data" / "downloads"
     sheets_path = base_path / "data" / "sheets"
 
-    # Download IMDb files
-    files_to_download = {"title.basics": False, "title.ratings": True}
-    download.Download(imdb_files_path, files_to_download).download_files()
+    if args["download"]:
+        # Download IMDb files
+        files_to_download = {"title.basics": False, "title.ratings": True}
+        download.Download(imdb_files_path, files_to_download).download_files()
+        print("Files downloaded")
 
+    print("Assembling data")
     # Import movie status data
     date_scores_path = sheets_path / "date_scores.csv"
     status_path = sheets_path / "status.csv"
@@ -52,6 +61,7 @@ def main() -> None:
     timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
     watch_list_path = sheets_path / f"watch_list_{timestamp}.xlsx"
     read_write_excel.write_excel(final_status, final_date_scores, watch_list_path)
+    print(f"Created excel file can be found at: {watch_list_path}")
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ import src.read_write.excel as read_write_excel
 
 def main() -> None:
     """Main function to process and generate the watch list."""
-    
+
     # Define file paths
     base_path = Path(__file__).parent.resolve()
     imdb_files_path = base_path / "data" / "downloads"
@@ -38,14 +38,15 @@ def main() -> None:
     final_status = (
         status.join(title_ratings)
         .join(title_basics)
-        .sort_values(["watched", "priority", "averageRating"], ascending=[True, False, False])
+        .sort_values(
+            ["watched", "priority", "averageRating"], ascending=[True, False, False]
+        )
     )
 
     # Prepare final date scores data
-    final_date_scores = (
-        date_scores.join(title_basics[["primaryTitle", "originalTitle", "startYear"]])
-        .sort_values("date")
-    )
+    final_date_scores = date_scores.join(
+        title_basics[["primaryTitle", "originalTitle", "startYear"]]
+    ).sort_values("date")
 
     # Write data to an Excel file
     timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")

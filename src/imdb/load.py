@@ -1,9 +1,24 @@
 from typing import List
 import pandas as pd
+from pathlib import Path
 
 
-def get_title_basic(tconst_index: List[str], file_path: str) -> pd.DataFrame:
-    """Fetches title basic information from the given file."""
+def get_title_basic(tconst_index: List[str], file_path: Path) -> pd.DataFrame:
+    """
+    Fetches title basic information from the given file.
+
+    Parameters
+    ----------
+    tconst_index : List[str]
+        List of movie identifiers (tconst column). string: tt<number>
+    file_path : Path
+        Full path of the file title.basics.tsv.gz. No need to unzip.
+
+    Returns
+    -------
+    pd.DataFrame
+        Subset of title.basics.tsv where genres are turned into columns.
+    """
     cols_to_use = [
         "tconst",
         "primaryTitle",
@@ -38,7 +53,21 @@ def get_title_basic(tconst_index: List[str], file_path: str) -> pd.DataFrame:
 
 
 def get_title_rating(tconst_index: List[str], file_path: str) -> pd.DataFrame:
-    """Fetches title ratings from the given file."""
+    """
+    Fetches title ratings from the given file.
+
+    Parameters
+    ----------
+    tconst_index : List[str]
+        List of movie identifiers (tconst column). string: tt<number>
+    file_path : str
+        Full path of the file title.ratings.tsv.gz. No need to unzip.
+
+    Returns
+    -------
+    pd.DataFrame
+        Subset of title.ratings.tsv.
+    """
     dtypes = {"averageRating": pd.Float32Dtype(), "numVotes": pd.Int32Dtype()}
 
     title_ratings = pd.read_csv(

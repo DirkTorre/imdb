@@ -21,20 +21,44 @@ class Download:
             "title.principals": False,
             "name.basics": False,
         }
+
+        Methods
+        -------
+        download_files()
+            Downloads the selected files from IMDb to the files_path specified at initialization.
     """
-    
+
     @dataclass
     class File:
-        """Represents a file to be downloaded from IMDb."""
-        
+        """
+        Represents a file to be downloaded from IMDb.
+
+        Attributes
+        ----------
+        imdb_base_url : str
+            Link to the portal to retrieve imdb datasets.
+        name: str
+            Full name of the file that needs to be retrieved from the imdb data portal.
+            More information can be found at: https://developer.imdb.com/non-commercial-datasets/
+
+        Methods
+        -------
+        get_imdb_url()
+            Returns the URL of the file on the IMDb server.
+        get_local_file_path()
+            Returns the local path for the downloaded raw file.
+        get_local_directory()
+            Returns the local directory where the file is stored.
+        """
+
         imdb_base_url: str = "https://datasets.imdbws.com/"
         name: str = ""
         base_path: Path = Path()
-        
+
         def __post_init__(self):
             """Ensure `base_path` is a Path object."""
             self.base_path = Path(self.base_path)
-        
+
         def get_imdb_url(self) -> str:
             """Returns the URL of the file on the IMDb server."""
             return f"{self.imdb_base_url}{self.name}.tsv.gz"
@@ -42,12 +66,14 @@ class Download:
         def get_local_file_path(self) -> Path:
             """Returns the local path for the downloaded raw file."""
             return self.base_path / f"{self.name}.tsv.gz"
-        
+
         def get_local_directory(self) -> Path:
             """Returns the local directory where the file is stored."""
             return self.base_path
 
-    def __init__(self, files_path: Path | str, files_to_download: dict[str, bool] = None):
+    def __init__(
+        self, files_path: Path | str, files_to_download: dict[str, bool] = None
+    ):
         self.files_path = Path(files_path)
         self.files_to_download = files_to_download or {
             "title.crew": False,

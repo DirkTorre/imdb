@@ -7,6 +7,10 @@ import src.imdb.load as load
 import src.read_write.csv as read_write_csv
 import src.read_write.excel as read_write_excel
 
+from bokeh.models import (ColumnDataSource, HoverTool, DataTable, TableColumn, DataCube, GroupingInfo)
+from bokeh.plotting import figure, show
+from bokeh.layouts import gridplot, layout
+import pandas as pd
 
 def main() -> None:
     """Main function to process and generate the watch list."""
@@ -63,6 +67,99 @@ def main() -> None:
     read_write_excel.write_excel(final_status, final_date_scores, watch_list_path)
     print(f"Created excel file can be found at: {watch_list_path}")
 
+    status_path_temp = base_path / "data" / "status.pickle"
+    date_scores_path_temp = base_path / "data" / "date_scores.pickle"
+    final_status.to_pickle(status_path_temp)
+    final_date_scores.to_pickle(date_scores_path_temp)
+
+    source = ColumnDataSource(final_status[~final_status["watched"]])
+    filtered_source = ColumnDataSource(final_status[~final_status["watched"] & final_status["priority"]])
+
+    TOOLTIPS = [
+        ("title", "@primaryTitle"),
+        ("year", "@startYear")
+    ]
+
+    # Create a Bokeh figure
+    fig_all = figure(title="Unwatched movies",
+            x_axis_label="Number of Votes",
+            y_axis_label="Average Rating",
+            width=500, height=500, y_range=(0,10),
+            tooltips=TOOLTIPS)
+
+
+
+    # Add scatter plot
+    fig_all.circle(x="numVotes", y="averageRating", name="temp", radius=5000, source=source)
+
+    # fig.select(name="temp")
+
+    hover = fig_all.select_one(HoverTool)
+    hover.point_policy = "follow_mouse"
+    # And we reference the mayor in the tooltip
+    hover.tooltips = [
+        ("title", "@primaryTitle"),
+        ("year", "@startYear")
+    ]
+
+    ###########################################################
+
+    fig_priority = figure(title="Unwatched priority movies",
+            x_axis_label="Number of Votes",
+            y_axis_label="Average Rating",
+            width=500, height=500, y_range=(0,10),
+            tooltips=TOOLTIPS)
+
+
+
+    # Add scatter plot
+    fig_priority.circle(x="numVotes", y="averageRating", name="temp", radius=5000, source=filtered_source)
+
+    # fig.select(name="temp")
+
+    hover = fig_priority.select_one(HoverTool)
+    hover.point_policy = "follow_mouse"
+    # And we reference the mayor in the tooltip
+    hover.tooltips = [
+        ("title", "@primaryTitle"),
+        ("year", "@startYear")
+    ]
+
+    ##########################################################
+    genre_columns = [ x for x in list(final_status.columns) if "genre" in x ]
+
+    genres = final_status[genre_columns].replace(False, pd.NA).stack().reset_index().drop(0, axis=1).rename(columns={"level_1": "genre"})
+    genres["genre"] = genres["genre"].str.replace("genre_","")
+    genres = genres.set_index("tconst")
+
+    display_status = final_status[~final_status["watched"]].drop(columns=genre_columns)
+    display_status = display_status.join(genres).groupby("genre").head(10).sort_values(["genre", "averageRating"], ascending=[True, False])
+    display_status = display_status[["averageRating", "primaryTitle", "startYear", "genre"]].round({"averageRating": 1})
+
+    top10 = ColumnDataSource(display_status)
+    columns = [
+            TableColumn(field="tconst", title="tconst"),
+            TableColumn(field="genre", title="genre"),
+            TableColumn(field="primaryTitle", title="title"),
+            TableColumn(field="startYear", title="year"),
+            TableColumn(field="averageRating", title="rating"),
+        ]
+
+    grouping = [
+        GroupingInfo(getter="genre")
+    ]
+
+    target = ColumnDataSource(data=dict(row_indices=[], labels=[]))
+
+    data_cube = DataCube(source=top10, columns=columns, grouping=grouping, target=target, width=500, height=500)
+
+    grid = gridplot([fig_priority, fig_all, data_cube], ncols=2, width=1000, height=500)
+    layout([
+        [fig_priority, fig_all],
+        [data_cube],
+    ])
+
+    show(grid)
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,11 @@
 # Log
 
+## 2025 march 145
+
+- Created visualization of unwatched movies
+- Created a collapsible table of top 5 movies per genre
+- Added new script to main (will become a separate module)
+
 ## 2025 march 9
 
 - Documented functions and classes.

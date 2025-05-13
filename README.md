@@ -50,7 +50,7 @@ uv sync
 To run the project use:
 
 ```bash
-uv run main
+uv run main.py
 ```
 
 

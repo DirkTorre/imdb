@@ -8,6 +8,17 @@
       "id": "5",
       "references": [],
       "title": "008 write tests"
+    }
+  ],
+  "in-progress": [
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-07T09:06:34.128Z",
+      "id": "11",
+      "references": [],
+      "title": "011 generate docfile, edit readme, and merge to main, clean branches"
     },
     {
       "assignedTo": {
@@ -20,18 +31,11 @@
       },
       "id": "12",
       "references": [],
-      "title": "012 create a recommondation script that generates a visualisation."
-    }
-  ],
-  "in-progress": [
-    {
-      "assignedTo": {
-        "name": "DirkTorre"
-      },
-      "creation_time": "2025-05-07T09:06:34.128Z",
-      "id": "11",
-      "references": [],
-      "title": "011 generate docfile, edit readme, and merge to main, clean branches"
+      "title": "012 create a recommondation script that generates a visualisation.",
+      "details": {
+        "content": "- open movie website when clicked on a dot\n- open movie website when clicked in the table\n- would be cleaner if there were 2 boolean sliders for \"show priority or all\" and \"show unwatched or all\"\n- clean scripts\n- document code",
+        "mime": "text/markdown"
+      }
     }
   ],
   "testing": [

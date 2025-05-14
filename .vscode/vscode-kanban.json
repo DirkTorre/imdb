@@ -31,9 +31,9 @@
       },
       "id": "12",
       "references": [],
-      "title": "012 create a recommondation script that generates a visualisation.",
+      "title": "012 create a recommondation script that generates a visualization.",
       "details": {
-        "content": "- open movie website when clicked on a dot\n- open movie website when clicked in the table\n- would be cleaner if there were 2 boolean sliders for \"show priority or all\" and \"show unwatched or all\"\n- clean scripts\n- document code",
+        "content": "- open movie website when clicked on a dot\n- open movie website when clicked in the table\n- clean scripts\n- document code",
         "mime": "text/markdown"
       }
     }

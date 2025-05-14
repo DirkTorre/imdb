@@ -26,14 +26,19 @@ Date format must be `<year>-<month>-<day>`.
 
 Run the script in the main folder: `uv run main -d -r`.
 
-The -d flag is needed to download a fresh copy of needed IMDb data.
-Only use the -d flag when it's possible a new movie is not in the dataset.
-
-The -r flag creates a visualization of unwatched movies.
-This helps with finding a movie fast.
-
 An excel is generated: `/data/sheets/watch_list_<date+time>`.
 The excel can be used to sort and filter the data to quickly find a movie you want to watch.
+
+### flags
+
+The optional -d flag is needed to download a fresh copy of needed IMDb data.
+Only use the -d flag when it's possible a new movie is not in the dataset.
+
+The optional -r flag creates a visualization of unwatched movies in a browser.
+This helps with finding a movie fast.
+
+The optional -s flag suppresses the creation of the excel file.
+This is handy when only the visualization is desired.
 
 
 ## kanban board

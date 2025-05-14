@@ -24,9 +24,13 @@ Only add the id of the movie, which can be found at the [imdb.com](https://www.i
 Add dates (and scores) of watched movies to /data/downloads/sheets/status.csv.
 Date format must be `<year>-<month>-<day>`.
 
-Run the script in the main folder: `uv run main -d`.
+Run the script in the main folder: `uv run main -d -r`.
+
 The -d flag is needed to download a fresh copy of needed IMDb data.
 Only use the -d flag when it's possible a new movie is not in the dataset.
+
+The -r flag creates a visualization of unwatched movies.
+This helps with finding a movie fast.
 
 An excel is generated: `/data/sheets/watch_list_<date+time>`.
 The excel can be used to sort and filter the data to quickly find a movie you want to watch.
@@ -57,5 +61,5 @@ uv run main.py
 To run any script use:
 
 ```bash
-uv run <file + path>
+uv run <path + file>
 ```

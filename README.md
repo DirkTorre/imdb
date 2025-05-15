@@ -29,7 +29,7 @@ IMDBb data is always downloaded when not available on disk.
 
 It generates an excel file and shows the dashboard in a new browser tab.
 The `main.html` file can be used to share the dashboard.
-The excel file `/data/sheets/watch_list_<date+time>` can be used to sort and filter the data to quickly find a movie you want to watch.
+The excel file `/data/sheets/watch_list.xlsx` can be used to sort and filter the data to quickly find a movie you want to watch.
 
 ### flags
 
@@ -44,7 +44,7 @@ arguments:
 
 ## kanban board
 
-Keeping track of tasks if managed with the VSCode extension Kanban made by Marcel J. Kloubert.
+Keeping track of tasks if managed with the [Kanban extension for VSCode](https://marketplace.visualstudio.com/items?itemName=mkloubert.vscode-kanban) made by Marcel J. Kloubert.
 
 ## env commands 
 

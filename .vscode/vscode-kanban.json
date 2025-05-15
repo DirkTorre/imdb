@@ -33,7 +33,7 @@
       "references": [],
       "title": "012 create a recommondation script that generates a visualization.",
       "details": {
-        "content": "- open movie website when clicked on a dot\n- open movie website when clicked in the table\n- clean scripts\n- document code",
+        "content": "- document code\n- merge to main",
         "mime": "text/markdown"
       }
     }

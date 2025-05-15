@@ -1,42 +1,34 @@
-from bokeh.models import (
-    CDSView,
-    ColumnDataSource,
-    DataCube,
-    DataTable,
-    Div,
-    GroupFilter,
-    GroupingInfo,
-    HoverTool,
-    HTMLTemplateFormatter,
-    OpenURL,
-    Tabs,
-    TabPanel,
-    TableColumn,
-    TapTool,
-)
-from bokeh.plotting import figure, show
-from bokeh.layouts import column
+import bokeh.models as models
+import bokeh.plotting as plotting
+import bokeh.layouts as layout
 import pandas as pd
 
 
 def create_movie_recommendations(final_status):
-    """Generate Bokeh visualizations for unwatched movies"""
+    """Generate Bokeh visualizations for unwatched movies."""
     print("Creating movie recommendations")
 
+    # Transform priority into a string format
     final_status["priority"] = final_status["priority"].map({True: "y", False: "n"})
     final_status["url"] = (
         "https://www.imdb.com/title/" + final_status.index.astype(str) + "/"
     )
-    source = ColumnDataSource(final_status[~final_status["watched"]])
 
-    filter_priority = GroupFilter(column_name="priority", group="y")
-    view_priority = CDSView(filter=filter_priority)
-    view_all = CDSView()
+    # Filter unwatched movies
+    source = models.ColumnDataSource(final_status[~final_status["watched"]])
 
-    tooltips = [("title", "@primaryTitle"), ("year", "@startYear")]
+    # Create filters and views
+    view_priority = models.CDSView(
+        filter=models.GroupFilter(column_name="priority", group="y")
+    )
+    view_all = models.CDSView()
+
+    # Tooltip setup
+    tooltips = [("Title", "@primaryTitle"), ("Year", "@startYear")]
 
     def create_figure(title, view, color):
-        fig = figure(
+        """Helper function to generate a scatter plot."""
+        fig = plotting.figure(
             title=title,
             x_axis_label="Number of Votes",
             y_axis_label="Average Rating",
@@ -53,41 +45,43 @@ def create_movie_recommendations(final_status):
             alpha=0.5,
             source=source,
             view=view,
-            color=color
+            color=color,
         )
 
-        hover = fig.select_one(HoverTool)
+        hover = fig.select_one(models.HoverTool)
         hover.point_policy = "follow_mouse"
         hover.tooltips = tooltips
 
-        taptool = fig.select(type=TapTool)
-        taptool.callback = OpenURL(url="@url")
+        fig.select_one(models.TapTool).callback = models.OpenURL(url="@url")
 
         return fig
 
-    fig_all = create_figure("Unwatched movies", view_all, "blue")
-    fig_prio = create_figure("Unwatched priority movies", view_priority, "green")
+    # Create figures
+    fig_all = create_figure("Unwatched Movies", view_all, "blue")
+    fig_prio = create_figure("Priority Unwatched Movies", view_priority, "green")
 
-    all_tabs = Tabs(
+    # Tab layout
+    all_tabs = models.Tabs(
         tabs=[
-            TabPanel(child=fig_prio, title="Priority Movies"),
-            TabPanel(child=fig_all, title="All Movies"),
+            models.TabPanel(child=fig_prio, title="Priority Movies"),
+            models.TabPanel(child=fig_all, title="All Movies"),
         ]
     )
 
+    # Process genre data
     genre_columns = [col for col in final_status.columns if "genre" in col]
     genres = (
         final_status[genre_columns]
         .replace(False, pd.NA)
         .stack()
         .reset_index()
-        .drop(0, axis=1)
+        .drop(columns=[0])
         .rename(columns={"level_1": "genre"})
     )
-
     genres["genre"] = genres["genre"].str.replace("genre_", "")
     genres = genres.set_index("tconst")
 
+    # Prepare display data
     display_status = final_status[~final_status["watched"]].drop(columns=genre_columns)
     display_status = (
         display_status.join(genres)
@@ -99,9 +93,10 @@ def create_movie_recommendations(final_status):
         ["averageRating", "primaryTitle", "startYear", "genre"]
     ].round({"averageRating": 1})
 
-    top10 = ColumnDataSource(display_status)
+    # Setup data table
+    top10 = models.ColumnDataSource(display_status)
     columns = [
-        TableColumn(field=field, title=title)
+        models.TableColumn(field=field, title=title)
         for field, title in [
             ("genre", "Genre"),
             ("primaryTitle", "Title"),
@@ -111,28 +106,29 @@ def create_movie_recommendations(final_status):
         ]
     ]
 
-    grouping = [GroupingInfo(getter="genre")]
-    target = ColumnDataSource(data=dict(row_indices=[], labels=[]))
-    data_cube = DataCube(
+    data_cube = models.DataCube(
         source=top10,
         columns=columns,
-        grouping=grouping,
-        target=target,
+        grouping=[models.GroupingInfo(getter="genre")],
+        target=models.ColumnDataSource(data=dict(row_indices=[], labels=[])),
         width=1500,
         height=500,
     )
 
-    header1 = Div(
+    # Create headers
+    header1 = models.Div(
         text="""<h1 style="text-align: center">Visualization of Unwatched Movies</h1>
-                <ul>
-                    <li>Use tabs to switch info.</li>
-                    <li>Hover over data points to view movie info.</li>
-                    <li>Click data point to go to IMDb.</li>
-                </ul>"""
-    )
-    header2 = Div(
-        text="""<h1 style="text-align: center">Top 10 Unwatched Movies per Genre</h1>
-        Press the + icon at the genre to unfold the movies."""
+                                   <ul>
+                                       <li>Use tabs to switch info.</li>
+                                       <li>Hover over data points to view movie info.</li>
+                                       <li>Click a data point to go to IMDb.</li>
+                                   </ul>"""
     )
 
-    show(column(header1, all_tabs, header2, data_cube))
+    header2 = models.Div(
+        text="""<h1 style="text-align: center">Top 10 Unwatched Movies per Genre</h1>
+                                   Press the + icon at the genre to unfold the movies."""
+    )
+
+    # Render visualization
+    plotting.show(layout.column(header1, all_tabs, header2, data_cube))

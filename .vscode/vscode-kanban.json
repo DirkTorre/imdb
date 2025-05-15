@@ -33,7 +33,7 @@
       "references": [],
       "title": "012 create a recommondation script that generates a visualization.",
       "details": {
-        "content": "- document code\n- merge to main",
+        "content": "- merge to main",
         "mime": "text/markdown"
       }
     }

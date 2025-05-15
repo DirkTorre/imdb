@@ -1,6 +1,14 @@
 # Log
 
-## 2025 march 145
+## 2025 march 15
+
+- Finished visualization
+- Cleaned scripts
+- Documented code
+- Cleaned README.md
+- Merged with main.
+
+## 2025 march 14
 
 - Created visualization of unwatched movies
 - Created a collapsible table of top 5 movies per genre

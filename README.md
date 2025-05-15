@@ -1,71 +1,67 @@
-# IMDb project
+# IMDb Movie Tracker
 
-A project to create a nice spreadsheet and dashboard of information about movies I want to watch.
-The spreadsheet is used to quickly find a movie on movie night with family or friends.
+A Python project for collecting and visualizing IMDb movie data, creating a structured spreadsheet and an interactive dashboard. This tool helps you quickly find a movie for movie nights with family or friends.
 
+## Features
 
-## Goals of the program
+- Maintain an **Excel spreadsheet** with movie details and watch history.
+- Automatically populate movie information using **IMDb data**.
+- Organize movies into **two tabs**:
+  - **Watch List**: Status and details of all movies.
+  - **Watch History**: Dates and scores of watched movies.
+- Generate an interactive **dashboard** with personalized movie recommendations.
 
-- Updating an excel file with information about movies I have and want to watch.
-- Excel file should filled with information about the movie using IMDB data
-- Excel file should have 2 tabs:
-    - One with watch status and info of all my movies
-    - One with states the dates I watched a movie
-- Create a visualization with movie recommendations from my list.
+## Setup
 
-## user guide
+### 1. Install Dependencies
 
-Install the environment (see the env commands section).
+This project uses `uv` as a package manager. Install `uv` by following the instructions [here](https://docs.astral.sh/uv/getting-started/installation/).
 
-Add movie info of your watch list to `/data/downloads/sheets/status.csv`.
-A o represent not and 1 represents yes/watched/etc.
-Only add the id of the movie, which can be found at the [imdb.com](https://www.imdb.com/title/tt0057012/?ref_=nv_sr_srsg_0_tt_8_nm_0_in_0_q_dr%2520strangel) in the url of the movie.
-
-Add dates (and scores) of watched movies to `/data/downloads/sheets/status.csv`.
-Date format must be `<year>-<month>-<day>`.
-
-Run the script in the main folder: `uv run main -ed`.
-IMDBb data is always downloaded when not available on disk.
-
-It generates an excel file and shows the dashboard in a new browser tab.
-The `main.html` file can be used to share the dashboard.
-The excel file `/data/sheets/watch_list.xlsx` can be used to sort and filter the data to quickly find a movie you want to watch.
-
-### flags
-
-The main command is : `uv run main.py`.
-
-arguments:
-
-- `-u` Force an update of IMDBb data.
-- `-e` Creates an excel file from available data.
-- `-d` Creates a dashboard from available data in a new web browser tab.
-    + `-r` Force reuse of previous generated data. Must be combined with `-e` or `-d`.
-
-## kanban board
-
-Keeping track of tasks if managed with the [Kanban extension for VSCode](https://marketplace.visualstudio.com/items?itemName=mkloubert.vscode-kanban) made by Marcel J. Kloubert.
-
-## env commands 
-
-This project uses uv as a package manager.
-Information on how to install uv [can be found here](https://docs.astral.sh/uv/getting-started/installation/).
-
-To create or sync the environment with the dependencies use:
+To create or sync the environment, run:
 
 ```bash
 uv sync
 ```
 
-To run the project use:
+### 2. Prepare Your Movie List
+
+1. Add movie IDs to your watch list in `/data/downloads/sheets/status.csv`.
+   - `0` → Not watched  
+   - `1` → Watched  
+   - Only include the **IMDb ID** (found in the movie’s URL, e.g., `tt0057012`).
+   
+2. Log watched movies in `/data/downloads/sheets/status.csv` with:
+   - **Date format**: `YYYY-MM-DD`
+   - **Optional score**: Your personal rating.
+
+### 3. Run the Program
+
+Execute the main script:
+
+```bash
+uv run main.py -ed
+```
+
+IMDb data is automatically downloaded if not available on disk.
+
+The script will:
+- Generate an **Excel file** (`/data/sheets/watch_list.xlsx`) for sorting and filtering movies.
+- Open the **dashboard** (`main.html`) in a new browser tab for an interactive view.
+
+## Command Line Flags
+
+Main command:
 
 ```bash
 uv run main.py <flags>
 ```
 
+Available flags:
+- `-u` → Force update of IMDb data.
+- `-e` → Generate an Excel file from available data.
+- `-d` → Create a dashboard in a web browser.
+  - `-r` → Reuse previously generated data (must be combined with `-e` or `-d`).
 
-To run any script use:
+## Kanban Board
 
-```bash
-uv run <path + file>
-```
+Task management is handled with the [Kanban extension for VSCode](https://marketplace.visualstudio.com/items?itemName=mkloubert.vscode-kanban) by Marcel J. Kloubert.

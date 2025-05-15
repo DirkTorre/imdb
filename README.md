@@ -1,61 +1,67 @@
-# IMDb project
+# IMDb Movie Tracker
 
-A project to create a nice spreadsheet of information about movies I want to watch.
-The spreadsheet is used to quickly find a movie on movie night with family or friends.
+A Python project for collecting and visualizing IMDb movie data, creating a structured spreadsheet and an interactive dashboard. This tool helps you quickly find a movie for movie nights with family or friends.
 
+## Features
 
-## Goals of the program
+- Maintain an **Excel spreadsheet** with movie details and watch history.
+- Automatically populate movie information using **IMDb data**.
+- Organize movies into **two tabs**:
+  - **Watch List**: Status and details of all movies.
+  - **Watch History**: Dates and scores of watched movies.
+- Generate an interactive **dashboard** with personalized movie recommendations.
 
-- Updating an excel file with information about movies I have and want to watch.
-- Excel file should filled with information about the movie using IMDB data
-- Excel file should have 2 tabs:
-    - One with watch status and info of all my movies
-    - One with states the dates I watched a movie
-- Create a visualization with movie recommendations from my list.
+## Setup
 
-## user guide
+### 1. Install Dependencies
 
-Install the environment (see the env commands section).
+This project uses `uv` as a package manager. Install `uv` by following the instructions [here](https://docs.astral.sh/uv/getting-started/installation/).
 
-Add movie info of your watch list to /data/downloads/sheets/status.csv.
-A o represent not and 1 represents yes/watched/etc.
-Only add the id of the movie, which can be found at the [imdb.com](https://www.imdb.com/title/tt0057012/?ref_=nv_sr_srsg_0_tt_8_nm_0_in_0_q_dr%2520strangel) in the url of the movie.
-
-Add dates (and scores) of watched movies to /data/downloads/sheets/status.csv.
-Date format must be `<year>-<month>-<day>`.
-
-Run the script in the main folder: `uv run main -d`.
-The -d flag is needed to download a fresh copy of needed IMDb data.
-Only use the -d flag when it's possible a new movie is not in the dataset.
-
-An excel is generated: `/data/sheets/watch_list_<date+time>`.
-The excel can be used to sort and filter the data to quickly find a movie you want to watch.
-
-
-## kanban board
-
-Keeping track of tasks if managed with the VSCode extension Kanban made by Marcel J. Kloubert.
-
-## env commands 
-
-This project uses uv as a package manager.
-Information on how to install uv [can be found here](https://docs.astral.sh/uv/getting-started/installation/).
-
-To create or sync the environment with the dependencies use:
+To create or sync the environment, run:
 
 ```bash
 uv sync
 ```
 
-To run the project use:
+### 2. Prepare Your Movie List
+
+1. Add movie IDs to your watch list in `/data/downloads/sheets/status.csv`.
+   - `0` → Not watched  
+   - `1` → Watched  
+   - Only include the **IMDb ID** (found in the movie’s URL, e.g., `tt0057012`).
+   
+2. Log watched movies in `/data/downloads/sheets/status.csv` with:
+   - **Date format**: `YYYY-MM-DD`
+   - **Optional score**: Your personal rating.
+
+### 3. Run the Program
+
+Execute the main script:
 
 ```bash
-uv run main
+uv run main.py -ed
 ```
 
+IMDb data is automatically downloaded if not available on disk.
 
-To run any script use:
+The script will:
+- Generate an **Excel file** (`/data/sheets/watch_list.xlsx`) for sorting and filtering movies.
+- Open the **dashboard** (`main.html`) in a new browser tab for an interactive view.
+
+## Command Line Flags
+
+Main command:
 
 ```bash
-uv run <file + path>
+uv run main.py <flags>
 ```
+
+Available flags:
+- `-u` → Force update of IMDb data.
+- `-e` → Generate an Excel file from available data.
+- `-d` → Create a dashboard in a web browser.
+  - `-r` → Reuse previously generated data (must be combined with `-e` or `-d`).
+
+## Kanban Board
+
+Task management is handled with the [Kanban extension for VSCode](https://marketplace.visualstudio.com/items?itemName=mkloubert.vscode-kanban) by Marcel J. Kloubert.

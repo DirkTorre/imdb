@@ -5,9 +5,16 @@ import pandas as pd
 
 
 def create_movie_recommendations(final_status):
-    """Generate Bokeh visualizations for unwatched movies."""
-    print("Creating movie recommendations")
+    """
+    Generate Bokeh visualizations for unwatched movies.
+    File with visualizations is stored in main.html in the root folder.
+    This file stands on its own and can be shared.
 
+    Parameters
+    ----------
+    final_status : pd.DataFrame
+        Contains status information of every movie in the watch list.
+    """
     # Transform priority into a string format
     final_status["priority"] = final_status["priority"].map({True: "y", False: "n"})
     final_status["url"] = (

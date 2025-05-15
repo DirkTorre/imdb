@@ -10,8 +10,15 @@ import src.read_write.excel as read_write_excel
 import src.visualization.recommendations as rec
 
 
-def parse_arguments():
-    """Parses command-line arguments."""
+def parse_arguments() -> argparse.ArgumentParser:
+    """
+    Parses command-line arguments.
+
+    Returns
+    -------
+    parser : ArgumentParser
+        Object with all the arguments that can be used when running the script.
+    """
     parser = argparse.ArgumentParser(
         description="Process and generate the watch list",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -24,8 +31,18 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def define_paths():
-    """Defines file paths used in processing."""
+def define_paths() -> dict:
+    """
+    Defines file paths used in processing.
+    
+    Returns
+    -------
+    dict
+        A dictionary with file paths.
+        imdb_files: folder location of downloaded IMDb files.
+        sheets: folder location of status.csv and date_scores.csv.
+        status_pickle: location of the temporary pickle file for data visualization.
+    """
     base_path = Path(__file__).parent.resolve()
     return {
         "imdb_files": base_path / "data" / "downloads",
@@ -34,15 +51,45 @@ def define_paths():
     }
 
 
-def download_imdb_data(imdb_files_path):
-    """Downloads IMDb dataset if needed."""
+def download_imdb_data(imdb_files_path: Path) -> None:
+    """
+    Downloads IMDb dataset if needed.
+
+    Parameters
+    ----------
+    imdb_files_path : Path
+        Path where the downloaded IMDb files will be stored.
+    """
     files_to_download = {"title.basics": True, "title.ratings": True}
     download.Download(imdb_files_path, files_to_download).download_files()
     print("Files downloaded.")
 
 
-def load_data(sheets_path, imdb_files_path):
-    """Loads necessary data for processing."""
+def load_data(sheets_path: Path, imdb_files_path: Path):
+    """
+    Loads necessary data for processing.
+
+    Parameters
+    ----------
+    sheets_path : Path
+        Path where the user made files date_scores.csv and status.csv are stored.
+    imdb_files_path : Path
+        Path where the downloaded IMDb files will be stored.
+
+    Returns
+    -------
+    date_scores : pd.DataFrame
+        Review scores and dates of watched movies.
+    status : pd.DataFrame
+        General overview of movie list. 1 is true, 0 is false. netflix and prime specify 
+        if a movie is available on these services.
+    title_basics : pd.DataFrame
+        Contains title.basics.tsv form the IMDB server.
+        Basic movie info.
+    title_ratings : pd.DataFrame
+        Contains title.ratings.tsv form the IMDB server.
+        Movie ratings.
+    """
     date_scores = read_write_csv.get_date_scores(sheets_path / "date_scores.csv")
     status = read_write_csv.get_status(sheets_path / "status.csv")
 
@@ -54,8 +101,30 @@ def load_data(sheets_path, imdb_files_path):
     return date_scores, status, title_basics, title_ratings
 
 
-def generate_final_status(status, title_ratings, title_basics):
-    """Generates final status data for movies."""
+def generate_final_status(
+        status: pd.DataFrame,
+        title_ratings: pd.DataFrame,
+        title_basics: pd.DataFrame) -> pd.DataFrame:
+    """
+    Generates final status data for movies.
+
+    Parameters
+    ----------
+    status : pd.DataFrame
+        General overview of movie list. 1 is true, 0 is false. netflix and prime specify 
+        if a movie is available on these services.
+    title_basics : pd.DataFrame
+        Contains title.basics.tsv form the IMDB server.
+        Basic movie info.
+    title_ratings : pd.DataFrame
+        Contains title.ratings.tsv form the IMDB server.
+        Movie ratings.
+
+    Returns
+    -------
+    pd.DataFrame
+        A join of all the DataFrame inputs.
+    """
     return (
         status.join(title_ratings)
         .join(title_basics)

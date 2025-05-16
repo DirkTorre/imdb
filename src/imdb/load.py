@@ -41,15 +41,18 @@ def get_title_basic(tconst_index: List[str], file_path: Path) -> pd.DataFrame:
         na_values="\\N",
     )
 
-    # Select specific tconst entries
-    title_basics = title_basics.loc[tconst_index]
+    # Get missing indices
+    not_in_title_basics = tconst_index.difference(title_basics.index)
+
+    # Get subset with existing indices
+    title_basics = title_basics.loc[tconst_index.intersection(title_basics.index)]
 
     # Process genres
     genre_exploded = title_basics["genres"].str.split(",").explode()
     genre = pd.crosstab(genre_exploded.index, genre_exploded)
     genre = genre.add_prefix("genre_").astype(pd.BooleanDtype())
 
-    return title_basics.drop(columns="genres").join(genre)
+    return title_basics.drop(columns="genres").join(genre), not_in_title_basics
 
 
 def get_title_rating(tconst_index: List[str], file_path: str) -> pd.DataFrame:
@@ -81,4 +84,10 @@ def get_title_rating(tconst_index: List[str], file_path: str) -> pd.DataFrame:
         na_values="\\N",
     )
 
-    return title_ratings.loc[tconst_index]
+    # Get missing indices
+    not_in_title_ratings = tconst_index.difference(title_ratings.index)
+
+    # Get subset with existing indices
+    title_ratings = title_ratings.loc[tconst_index.intersection(title_ratings.index)]
+
+    return title_ratings, not_in_title_ratings

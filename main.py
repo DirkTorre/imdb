@@ -1,7 +1,9 @@
 from pathlib import Path
 import argparse
-import pandas as pd
+import warnings
 import os
+
+import pandas as pd
 
 import src.imdb.download as download
 import src.imdb.load as load
@@ -72,31 +74,42 @@ def load_data(sheets_path: Path, imdb_files_path: Path):
     Parameters
     ----------
     sheets_path : Path
-        Path where the user made files date_scores.csv and status.csv are stored.
+        Path where the user-made files date_scores.csv and status.csv are stored.
     imdb_files_path : Path
         Path where the downloaded IMDb files will be stored.
 
     Returns
     -------
     date_scores : pd.DataFrame
-        Review scores and dates of watched movies.
+        Movie review scores and watch dates.
+        1 is true, 0 is false. netflix and prime specify if a movie is available on these services.
     status : pd.DataFrame
-        General overview of movie list. 1 is true, 0 is false. netflix and prime specify 
-        if a movie is available on these services.
+        General movie list overview.
+        1 is true, 0 is false. netflix and prime specify if a movie is available on these services.
     title_basics : pd.DataFrame
-        Contains title.basics.tsv form the IMDB server.
-        Basic movie info.
+        Basic movie info from title.basics.tsv file from the IMDB server.
     title_ratings : pd.DataFrame
-        Contains title.ratings.tsv form the IMDB server.
-        Movie ratings.
+        Movie ratings from title.ratings.tsv file from the IMDB server.
     """
+
+    # Load CSV files
     date_scores = read_write_csv.get_date_scores(sheets_path / "date_scores.csv")
     status = read_write_csv.get_status(sheets_path / "status.csv")
 
     needed_indices = date_scores.index.union(status.index)
     
-    title_basics = load.get_title_basic(needed_indices, imdb_files_path / "title.basics.tsv.gz")
-    title_ratings = load.get_title_rating(needed_indices, imdb_files_path / "title.ratings.tsv.gz")
+    # Load IMDb data
+    title_basics, not_in_title_basics = load.get_title_basic(needed_indices, imdb_files_path / "title.basics.tsv.gz")
+    title_ratings, not_in_title_ratings = load.get_title_rating(needed_indices, imdb_files_path / "title.ratings.tsv.gz")
+
+    # Warn if any indices are missing
+    for filename, missing_indices in [
+        ("title.basics.tsv.gz", list(not_in_title_basics)),
+        ("title.ratings.tsv.gz", list(not_in_title_ratings))
+    ]:
+        if missing_indices:
+            message = f"\nIndices not in {filename}:\n\t{str(list(missing_indices))}"
+            warnings.warn(message, UserWarning)
 
     return date_scores, status, title_basics, title_ratings
 
@@ -130,7 +143,7 @@ def generate_final_status(
         .join(title_basics)
         .sort_values(["watched", "priority", "averageRating"], ascending=[True, False, False])
     )
-
+        
 
 def main():
     """Main function to process and generate the watch list."""
@@ -168,7 +181,8 @@ def main():
 
     if args.dashboard:
         print("Creating movie recommendation visualization...")
-        rec.create_movie_recommendations(final_status)
+        unwatched_movies = final_status[~final_status["watched"]]
+        rec.create_movie_recommendations(unwatched_movies)
 
 
 if __name__ == "__main__":

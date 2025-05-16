@@ -16,13 +16,19 @@ def create_movie_recommendations(final_status):
         Contains status information of every movie in the watch list.
     """
     # Transform priority into a string format
-    final_status["priority"] = final_status["priority"].map({True: "y", False: "n"})
+    final_status.loc[:,"priority"] = final_status["priority"].astype(pd.BooleanDtype()).map({True: "y", False: "n"})
     final_status["url"] = (
         "https://www.imdb.com/title/" + final_status.index.astype(str) + "/"
     )
 
+    size = (final_status["numVotes"].max() - final_status["numVotes"].min()) / 100
+    x_min = final_status["numVotes"].min() - 2*size
+    x_max = final_status["numVotes"].max() + 2*size
+    y_min = final_status["averageRating"].min()
+    y_max = final_status["averageRating"].max()
+
     # Filter unwatched movies
-    source = models.ColumnDataSource(final_status[~final_status["watched"]])
+    source = models.ColumnDataSource(final_status)
 
     # Create filters and views
     view_priority = models.CDSView(
@@ -40,15 +46,16 @@ def create_movie_recommendations(final_status):
             x_axis_label="Number of Votes",
             y_axis_label="Average Rating",
             width=1500,
-            height=500,
-            y_range=(0, 10),
+            height=1000,
+            y_range=(y_min, y_max),
+            x_range=(x_min, x_max),
             tooltips=tooltips,
             tools="tap",
         )
         fig.circle(
             x="numVotes",
             y="averageRating",
-            radius=3000,
+            radius=size,
             alpha=0.5,
             source=source,
             view=view,
@@ -119,7 +126,7 @@ def create_movie_recommendations(final_status):
         grouping=[models.GroupingInfo(getter="genre")],
         target=models.ColumnDataSource(data=dict(row_indices=[], labels=[])),
         width=1500,
-        height=500,
+        height=1500,
     )
 
     # Create headers

@@ -1,5 +1,9 @@
-import pandas as pd
+import warnings
+import sys
 from pathlib import Path
+
+import pandas as pd
+
 
 
 def get_status(file_path: Path) -> pd.DataFrame:
@@ -23,7 +27,16 @@ def get_status(file_path: Path) -> pd.DataFrame:
         "netflix": pd.BooleanDtype(),
         "prime": pd.BooleanDtype(),
     }
-    return pd.read_csv(file_path, dtype=dtypes, index_col="tconst")
+    status = pd.read_csv(file_path, dtype=dtypes, index_col="tconst")
+
+    duplicated = status.index.duplicated()
+    if duplicated.any():
+        dups = str(list(status[duplicated].index))
+        message = f"Duplicate indices found in:\n\t{file_path}\nPlease fix this: {dups}"
+        warnings.warn(message, UserWarning)
+        sys.exit(0)
+    
+    return status
 
 
 def get_date_scores(file_path: Path) -> pd.DataFrame:

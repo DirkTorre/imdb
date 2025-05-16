@@ -7,6 +7,7 @@ requires-python = "==3.12.9"
 dependencies = [
     "bokeh==3.7.3",
     "bokeh-sampledata>=2024.2",
+    "openpyxl>=3.1.5",
     "pandas>=2.2.3",
     "pyarrow>=20.0.0",
     "pypdl>=1.5.3",

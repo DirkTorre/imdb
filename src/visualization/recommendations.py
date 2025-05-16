@@ -50,7 +50,7 @@ def create_movie_recommendations(final_status):
             y_range=(y_min, y_max),
             x_range=(x_min, x_max),
             tooltips=tooltips,
-            tools="tap",
+            tools="tap,box_zoom,pan,wheel_zoom,reset,save",
         )
         fig.circle(
             x="numVotes",

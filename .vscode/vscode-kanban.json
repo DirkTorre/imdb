@@ -37,7 +37,7 @@
       "references": [],
       "title": "012 create a recommondation script that generates a visualisation.",
       "details": {
-        "content": "- create a top 10 reccomondations per year, just like with the genres (clickable years?)\n- top 10 prio per genre",
+        "content": "- create another graph tab but for the last 5 years, color by year.\n- create a table tab for top 10 prio per genre",
         "mime": "text/markdown"
       }
     },

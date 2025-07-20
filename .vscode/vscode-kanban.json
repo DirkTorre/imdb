@@ -21,40 +21,22 @@
         "content": "TODO:\n- generate docfile\n- create documentation file\n\nDONE:\n- readme\n- merge main",
         "mime": "text/markdown"
       }
-    }
-  ],
-  "in-progress": [
-    {
-      "assignedTo": {
-        "name": "DirkTorre"
-      },
-      "creation_time": "2025-05-07T09:12:57.854Z",
-      "description": {
-        "content": "a dashboards with movies per genre (collapsable).",
-        "mime": "text/markdown"
-      },
-      "id": "12",
-      "references": [],
-      "title": "012 create a recommondation script that generates a visualisation.",
-      "details": {
-        "content": "- create another graph tab but for the last 5 years, color by year.\n- create a table tab for top 10 prio per genre",
-        "mime": "text/markdown"
-      }
     },
     {
       "assignedTo": {
         "name": "DirkTorre"
       },
-      "creation_time": "2025-05-15T20:50:03.835Z",
-      "id": "13",
-      "references": [],
-      "title": "013 update movie data",
-      "details": {
-        "content": "- seen movies added",
+      "creation_time": "2025-07-20T19:36:00.376Z",
+      "description": {
+        "content": "top 5 per year of th elast 10 years",
         "mime": "text/markdown"
-      }
+      },
+      "id": "14",
+      "references": [],
+      "title": "create table of best unwatched movies of the last years"
     }
   ],
+  "in-progress": [],
   "testing": [
     {
       "assignedTo": {
@@ -142,6 +124,36 @@
       "id": "10",
       "references": [],
       "title": "010 add logging to console"
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-07T09:12:57.854Z",
+      "description": {
+        "content": "a dashboards with movies per genre (collapsable).",
+        "mime": "text/markdown"
+      },
+      "id": "12",
+      "references": [],
+      "title": "012 create a recommondation script that generates a visualisation.",
+      "details": {
+        "content": "- create another graph tab but for the last 5 years, color by year.\n- create a table tab for top 10 prio per genre",
+        "mime": "text/markdown"
+      }
+    },
+    {
+      "assignedTo": {
+        "name": "DirkTorre"
+      },
+      "creation_time": "2025-05-15T20:50:03.835Z",
+      "id": "13",
+      "references": [],
+      "title": "013 update movie data",
+      "details": {
+        "content": "- seen movies added",
+        "mime": "text/markdown"
+      }
     }
   ]
 }
